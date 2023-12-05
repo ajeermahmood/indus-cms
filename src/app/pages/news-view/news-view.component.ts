@@ -1,31 +1,30 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
-import { BlogsService } from "app/services/blog.service";
+import { NewsService } from "app/services/news.service";
 import { AddImgDialog } from "../common/add-img-dialog/add-img-dialog.component";
 
 @Component({
-  selector: "app-blog-view",
-  templateUrl: "./blog-view.component.html",
-  styleUrls: ["./blog-view.component.scss"],
+  selector: "app-news-view",
+  templateUrl: "./news-view.component.html",
+  styleUrls: ["./news-view.component.scss"],
 })
-export class BlogViewComponent implements OnInit {
-  blog_id: any;
+export class NewsViewComponent implements OnInit {
+  news_id: any;
   isLoading: boolean = true;
-  blogData: any;
+  newsData: any;
   tinyMceConfig: any;
 
   thumbnail_img: any = "";
   main_img: any = "";
 
-  blog_title: string = "";
   constructor(
     private readonly route: ActivatedRoute,
-    private blogsService: BlogsService,
+    private newsService: NewsService,
     public dialog: MatDialog
   ) {
     this.route.queryParams.subscribe((res) => {
-      this.blog_id = res.id;
+      this.news_id = res.id;
     });
 
     this.tinyMceConfig = {
@@ -76,13 +75,13 @@ export class BlogViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.blogsService
-      .getBlogDetails(this.blog_id)
+    this.newsService
+      .getNewsDetails(this.news_id)
       .subscribe((res) => {
         console.log(res);
-        this.blogData = res;
-        this.thumbnail_img = `https://indusre.com/blogsimg/${res.blogs_thumbnail}`;
-        this.main_img = `https://indusre.com/blogsimg/${res.blogs_mainimage}`;
+        this.newsData = res;
+        this.thumbnail_img = `https://indusre.com/newsimg/${res.news_thumbnail}`;
+        this.main_img = `https://indusre.com/newsimg/${res.news_mainimage}`;
       })
       .add(() => {
         this.isLoading = false;
@@ -90,7 +89,7 @@ export class BlogViewComponent implements OnInit {
   }
 
   save() {
-    console.log(this.blogData);
+    console.log(this.newsData);
   }
 
   editImg(img, type): void {
@@ -105,7 +104,7 @@ export class BlogViewComponent implements OnInit {
 
       if (type == "thumbnail") {
         this.thumbnail_img = result.img;
-      }else {
+      } else {
         this.main_img = result.img;
       }
     });

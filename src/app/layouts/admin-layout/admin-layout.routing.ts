@@ -9,6 +9,8 @@ import { TableListComponent } from "../../table-list/table-list.component";
 import { TypographyComponent } from "../../typography/typography.component";
 import { UserProfileComponent } from "../../user-profile/user-profile.component";
 import { BlogViewComponent } from "app/pages/blog-view/blog-view.component";
+import { NewsComponent } from "app/pages/news/news.component";
+import { NewsViewComponent } from "app/pages/news-view/news-view.component";
 
 export const AdminLayoutRoutes: Routes = [
   // {
@@ -56,6 +58,8 @@ export const AdminLayoutRoutes: Routes = [
   { path: "dashboard", component: DashboardComponent },
   { path: "blogs", component: BlogsComponent },
   { path: "blog-view", component: BlogViewComponent },
+  { path: "news", component: NewsComponent },
+  { path: "news-view", component: NewsViewComponent },
   { path: "user-profile", component: UserProfileComponent },
   { path: "table-list", component: TableListComponent },
   { path: "typography", component: TypographyComponent },

@@ -3,25 +3,25 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { Route, Router } from "@angular/router";
-import { BlogsService } from "app/services/blog.service";
+import { Router } from "@angular/router";
+import { NewsService } from "app/services/news.service";
 
 @Component({
-  selector: "app-blogs",
-  templateUrl: "./blogs.component.html",
-  styleUrls: ["./blogs.component.scss"],
+  selector: "app-news",
+  templateUrl: "./news.component.html",
+  styleUrls: ["./news.component.scss"],
 })
-export class BlogsComponent implements OnInit {
+export class NewsComponent implements OnInit {
   displayedColumns: string[] = ["id", "title", "date"];
 
-  allBlogs: MatTableDataSource<any>;
-  allBlogsCount: any;
+  allNews: MatTableDataSource<any>;
+  allNewsCount: any;
   isLoading: boolean = true;
   pageChangeLoading: boolean = false;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
-    private blogsService: BlogsService,
+    private newsService: NewsService,
     private router: Router
   ) {}
 
@@ -44,17 +44,16 @@ export class BlogsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.blogsService
-      .getallBlogs(10, 1, "")
+    this.newsService
+      .getallNews(10, 1, "")
       .subscribe((res) => {
         console.log(res);
-        this.allBlogs = new MatTableDataSource(res.blogs);
-        this.allBlogsCount = res.count;
+        this.allNews = new MatTableDataSource(res.blogs);
+        this.allNewsCount = res.count;
         setTimeout(() => {
-          if (this.allBlogs != undefined) {
-            this.allBlogs.paginator = this.paginator;
-            this.allBlogs.paginator.pageSize = 10;
-            this.allBlogs.sort = this.sort;
+          if (this.allNews != undefined) {
+            // this.allNews.paginator = this.paginator;
+            this.allNews.sort = this.sort;
           }
         });
       })
@@ -63,18 +62,19 @@ export class BlogsComponent implements OnInit {
       });
   }
 
-  navigateToViewPage(blog: any) {
-    this.router.navigate(["/blog-view"], {
-      queryParams: { id: blog.blogs_id },
+  navigateToViewPage(news: any) {
+    this.router.navigate(["/news-view"], {
+      queryParams: { id: news.news_id },
     });
   }
 
   pageChange(event) {
     this.pageChangeLoading = true;
-    this.blogsService
-      .getallBlogs(event.pageSize, event.pageIndex + 1, "")
+    this.newsService
+      .getallNews(event.pageSize, event.pageIndex + 1, "")
       .subscribe((res) => {
-        this.allBlogs = new MatTableDataSource(res.blogs);
+        console.log(res);
+        this.allNews = new MatTableDataSource(res.blogs);
       })
       .add(() => {
         this.pageChangeLoading = false;

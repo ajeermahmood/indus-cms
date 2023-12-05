@@ -4,7 +4,7 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header card-header-danger">
-            <h4 class="card-title">All Blogs</h4>
+            <h4 class="card-title">All News</h4>
           </div>
           <div class="card-body">
             <div
@@ -17,7 +17,7 @@
             <table
               *ngIf="!isLoading"
               mat-table
-              [dataSource]="allBlogs"
+              [dataSource]="allNews"
               matSort
               (matSortChange)="announceSortChange($event)"
               class="mat-elevation-z8"
@@ -33,7 +33,7 @@
                   ID
                 </th>
                 <td mat-cell *matCellDef="let item">
-                  <span *ngIf="!pageChangeLoading">{{ item.blogs_id }}</span>
+                  <span *ngIf="!pageChangeLoading">{{ item.news_id }}</span>
                   <ngx-skeleton-loader
                     [theme]="{
                       width: '60px',
@@ -50,7 +50,7 @@
               <ng-container matColumnDef="title">
                 <th mat-header-cell *matHeaderCellDef>Title</th>
                 <td mat-cell *matCellDef="let item">
-                  <span *ngIf="!pageChangeLoading">{{ item.blogs_title }}</span>
+                  <span *ngIf="!pageChangeLoading">{{ item.news_title }}</span>
                   <ngx-skeleton-loader
                     [theme]="{
                       width: '600px',
@@ -74,7 +74,7 @@
                   Date
                 </th>
                 <td mat-cell *matCellDef="let item">
-                  <span *ngIf="!pageChangeLoading">{{ item.blogs_date }}</span>
+                  <span *ngIf="!pageChangeLoading">{{ item.news_date }}</span>
                   <ngx-skeleton-loader
                     [theme]="{
                       width: '100px',
@@ -97,8 +97,8 @@
 
             <mat-paginator
               #paginator
-              [pageSizeOptions]="[6, 8, 10, 14, 20]"
-              [length]="allBlogsCount"
+              [pageSizeOptions]="[10, 14, 20]"
+              [length]="allNewsCount"
               showFirstLastButtons
               (page)="pageChange($event)"
             ></mat-paginator>

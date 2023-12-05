@@ -22,7 +22,11 @@ import { TableListComponent } from "../../table-list/table-list.component";
 import { TypographyComponent } from "../../typography/typography.component";
 import { UserProfileComponent } from "../../user-profile/user-profile.component";
 import { AdminLayoutRoutes } from "./admin-layout.routing";
-import { EditorModule } from '@tinymce/tinymce-angular';
+import { EditorModule } from "@tinymce/tinymce-angular";
+import { NewsComponent } from "app/pages/news/news.component";
+import { NgxSkeletonLoaderModule } from "ngx-skeleton-loader";
+import { NewsViewComponent } from "app/pages/news-view/news-view.component";
+import { MatDialogModule } from "@angular/material/dialog";
 
 @NgModule({
   imports: [
@@ -40,7 +44,9 @@ import { EditorModule } from '@tinymce/tinymce-angular';
     MatSortModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
-    EditorModule
+    EditorModule,
+    NgxSkeletonLoaderModule,
+    MatDialogModule,
   ],
   declarations: [
     DashboardComponent,
@@ -52,6 +58,8 @@ import { EditorModule } from '@tinymce/tinymce-angular';
     NotificationsComponent,
     BlogsComponent,
     BlogViewComponent,
+    NewsComponent,
+    NewsViewComponent,
   ],
 })
 export class AdminLayoutModule {}
