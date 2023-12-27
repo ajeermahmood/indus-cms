@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
 import { catchError, map } from "rxjs/operators";
 
-const API_URL = "https://indusre.com/cms/news/";
+const API_URL = "https://indusre.com/cms/news";
 
 @Injectable({ providedIn: "root" })
 export class NewsService {
