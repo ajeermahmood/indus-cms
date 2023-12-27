@@ -1,10 +1,13 @@
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { Component, OnInit, ViewChild } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { NewsService } from "app/services/news.service";
+import { CautionDialog } from "../common/caution-dialog/caution-dialog.component";
 
 @Component({
   selector: "app-news",
@@ -12,7 +15,7 @@ import { NewsService } from "app/services/news.service";
   styleUrls: ["./news.component.scss"],
 })
 export class NewsComponent implements OnInit {
-  displayedColumns: string[] = ["id", "title", "date"];
+  displayedColumns: string[] = ["id", "title", "date", "action"];
 
   allNews: MatTableDataSource<any>;
   allNewsCount: any;
@@ -22,7 +25,9 @@ export class NewsComponent implements OnInit {
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private newsService: NewsService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) {}
 
   @ViewChild(MatSort) sort: MatSort;
@@ -65,6 +70,42 @@ export class NewsComponent implements OnInit {
   navigateToViewPage(news: any) {
     this.router.navigate(["/news-view"], {
       queryParams: { id: news.news_id },
+    });
+  }
+
+  navigateToAddNewNewsPage() {
+    this.router.navigate(["/add-new-news"]);
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, "close", {
+      duration: 3000,
+      // panelClass: "my-custom-snackbar",
+      verticalPosition: "top",
+      horizontalPosition: "center",
+    });
+  }
+
+  delete(news) {
+    const dialogRef = this.dialog.open(CautionDialog, {
+      width: "40rem",
+      height: "17rem",
+      data: {
+        id: news.news_id,
+        title: news.news_title,
+        type: "news",
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result != undefined && result.delete == true) {
+        this.newsService
+          .deleteNews(news.news_id, news.news_mainimage, news.news_thumbnail)
+          .subscribe((res) => {
+            this.openSnackBar("News deleted successfully");
+            location.reload();
+          });
+      }
     });
   }
 

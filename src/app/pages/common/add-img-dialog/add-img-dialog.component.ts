@@ -12,6 +12,7 @@ import {
 })
 export class AddImgDialog implements OnInit {
   image: any = "";
+  image_file: File;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<AddImgDialog>,
@@ -29,6 +30,7 @@ export class AddImgDialog implements OnInit {
   }
 
   handleFileInput(files: any) {
+    this.image_file = files[0];
     const reader = new FileReader();
     reader.readAsDataURL(files[0]);
     reader.onload = (event) => {
@@ -39,6 +41,7 @@ export class AddImgDialog implements OnInit {
   submit() {
     this.dialogRef.close({
       img: this.image,
+      file: this.image_file,
     });
   }
 }

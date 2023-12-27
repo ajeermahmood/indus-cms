@@ -3,6 +3,9 @@ import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
 import { NewsService } from "app/services/news.service";
 import { AddImgDialog } from "../common/add-img-dialog/add-img-dialog.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { last, map, tap } from "rxjs";
+import { HttpEvent, HttpEventType } from "@angular/common/http";
 
 @Component({
   selector: "app-news-view",
@@ -15,13 +18,21 @@ export class NewsViewComponent implements OnInit {
   newsData: any;
   tinyMceConfig: any;
 
-  thumbnail_img: any = "";
   main_img: any = "";
+  main_img_file: File;
+  thumbnail_img: any = "";
+  thumbnail_img_file: File;
+
+  saving: boolean = false;
+
+  uploading_progress: any = 0;
+  uploading: boolean = false;
 
   constructor(
     private readonly route: ActivatedRoute,
     private newsService: NewsService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) {
     this.route.queryParams.subscribe((res) => {
       this.news_id = res.id;
@@ -88,8 +99,8 @@ export class NewsViewComponent implements OnInit {
       });
   }
 
-  save() {
-    console.log(this.newsData);
+  preview() {
+    window.open(`https://indusre.com/news/${this.news_id}`, "_blank");
   }
 
   editImg(img, type): void {
@@ -104,9 +115,95 @@ export class NewsViewComponent implements OnInit {
 
       if (type == "thumbnail") {
         this.thumbnail_img = result.img;
+        this.thumbnail_img_file = result.file;
       } else {
         this.main_img = result.img;
+        this.main_img_file = result.file;
       }
     });
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, "close", {
+      duration: 3000,
+      // panelClass: "my-custom-snackbar",
+      verticalPosition: "top",
+      horizontalPosition: "center",
+    });
+  }
+
+  save() {
+    const formdata: FormData = new FormData();
+    let updating_imgs: number = 0;
+    this.saving = true;
+
+    var data = {
+      title: this.newsData.news_title,
+      date: new Date(),
+      desc: this.newsData.news_description,
+    };
+
+    this.newsService
+      .updateNews(this.news_id, data)
+      .subscribe((res) => {
+        console.log(res);
+      })
+      .add(() => {
+        this.saving = false;
+        this.openSnackBar("Blog successfully edited!");
+      });
+
+    if (new String(this.main_img).startsWith("data")) {
+      formdata.append("img", this.main_img_file);
+      formdata.append("img_name", this.newsData.news_mainimage);
+      updating_imgs++;
+    }
+
+    if (new String(this.thumbnail_img).startsWith("data")) {
+      formdata.append("thumb_img", this.thumbnail_img_file);
+      formdata.append("thumb_img_name", this.newsData.news_thumbnail);
+      updating_imgs++;
+    }
+
+    if (updating_imgs > 0) {
+      this.uploading = true;
+      console.log("imgs edited..");
+      this.openSnackBar(`Blog image updating ${this.uploading_progress}%`);
+      this.newsService
+        .updateNewsImg(formdata)
+        .pipe(
+          map((event) => this.getEventMessage(event)),
+          tap((message) => {}),
+          last()
+        )
+        .subscribe((v) => {
+          if (this.uploading_progress == 100) {
+            this.openSnackBar("Blog image successfully updated!");
+          }
+        });
+    }
+  }
+
+  private getEventMessage(event: HttpEvent<any>) {
+    switch (event.type) {
+      case HttpEventType.Sent:
+        return `Uploading file `;
+
+      case HttpEventType.UploadProgress:
+        // Compute and show the % done:
+        const percentDone = event.total
+          ? Math.round((100 * event.loaded) / event.total)
+          : 0;
+
+        this.uploading_progress = percentDone;
+        return `File is ${percentDone}% uploaded.`;
+
+      case HttpEventType.Response:
+        this.uploading = false;
+        return `File was completely uploaded!`;
+
+      default:
+        return `File surprising upload event: ${event.type}.`;
+    }
   }
 }

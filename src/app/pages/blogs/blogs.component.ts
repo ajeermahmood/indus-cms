@@ -1,10 +1,13 @@
 import { LiveAnnouncer } from "@angular/cdk/a11y";
 import { Component, OnInit, ViewChild } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Route, Router } from "@angular/router";
 import { BlogsService } from "app/services/blog.service";
+import { CautionDialog } from "../common/caution-dialog/caution-dialog.component";
 
 @Component({
   selector: "app-blogs",
@@ -12,7 +15,7 @@ import { BlogsService } from "app/services/blog.service";
   styleUrls: ["./blogs.component.scss"],
 })
 export class BlogsComponent implements OnInit {
-  displayedColumns: string[] = ["id", "title", "date"];
+  displayedColumns: string[] = ["id", "title", "date", "action"];
 
   allBlogs: MatTableDataSource<any>;
   allBlogsCount: any;
@@ -22,7 +25,9 @@ export class BlogsComponent implements OnInit {
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private blogsService: BlogsService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) {}
 
   @ViewChild(MatSort) sort: MatSort;
@@ -63,9 +68,44 @@ export class BlogsComponent implements OnInit {
       });
   }
 
+  openSnackBar(message: string) {
+    this._snackBar.open(message, "close", {
+      duration: 3000,
+      // panelClass: "my-custom-snackbar",
+      verticalPosition: "top",
+      horizontalPosition: "center",
+    });
+  }
+
   navigateToViewPage(blog: any) {
     this.router.navigate(["/blog-view"], {
       queryParams: { id: blog.blogs_id },
+    });
+  }
+  navigateToAddNewBlogPage() {
+    this.router.navigate(["/add-new-blog"]);
+  }
+
+  delete(blog) {
+    const dialogRef = this.dialog.open(CautionDialog, {
+      width: "40rem",
+      height: "17rem",
+      data: {
+        id: blog.blogs_id,
+        title: blog.blogs_title,
+        type: "blog",
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result != undefined && result.delete == true) {
+        this.blogsService
+          .deleteBlog(blog.blogs_id, blog.blogs_mainimage, blog.blogs_thumbnail)
+          .subscribe((res) => {
+            this.openSnackBar("Blog deleted successfully");
+            location.reload();
+          });
+      }
     });
   }
 

@@ -1,44 +1,37 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute } from "@angular/router";
-import { BlogsService } from "app/services/blog.service";
 import { AddImgDialog } from "../common/add-img-dialog/add-img-dialog.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { BlogsService } from "app/services/blog.service";
 import { HttpEvent, HttpEventType } from "@angular/common/http";
 import { last, map, tap } from "rxjs";
+import * as uuid from "uuid";
+import { NewsService } from "app/services/news.service";
 
 @Component({
-  selector: "app-blog-view",
-  templateUrl: "./blog-view.component.html",
-  styleUrls: ["./blog-view.component.scss"],
+  selector: "app-add-new-news",
+  templateUrl: "./add-new-news.component.html",
+  styleUrls: ["./add-new-news.component.scss"],
 })
-export class BlogViewComponent implements OnInit {
-  blog_id: any;
-  isLoading: boolean = true;
-  blogData: any;
+export class AddNewNewsComponent implements OnInit {
   tinyMceConfig: any;
-
-  main_img: any = "";
-  main_img_file: File;
-  thumbnail_img: any = "";
-  thumbnail_img_file: File;
-
-  blog_title: string = "";
-
-  saving: boolean = false;
+  blog_desc: any = "";
+  blog_title: any = "";
 
   uploading_progress: any = 0;
   uploading: boolean = false;
-  constructor(
-    private readonly route: ActivatedRoute,
-    private blogsService: BlogsService,
-    public dialog: MatDialog,
-    private _snackBar: MatSnackBar
-  ) {
-    this.route.queryParams.subscribe((res) => {
-      this.blog_id = res.id;
-    });
+  saving: boolean = false;
 
+  thumbnail_img: any = "assets/img/add-image.png";
+  main_img: any = "assets/img/add-image.png";
+
+  main_img_file: File;
+  thumbnail_img_file: File;
+  constructor(
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar,
+    private newsService: NewsService
+  ) {
     this.tinyMceConfig = {
       height: 500,
       // menubar: true,
@@ -86,23 +79,7 @@ export class BlogViewComponent implements OnInit {
     };
   }
 
-  ngOnInit() {
-    this.blogsService
-      .getBlogDetails(this.blog_id)
-      .subscribe((res) => {
-        console.log(res);
-        this.blogData = res;
-        this.thumbnail_img = `https://indusre.com/blogsimg/${res.blogs_thumbnail}`;
-        this.main_img = `https://indusre.com/blogsimg/${res.blogs_mainimage}`;
-      })
-      .add(() => {
-        this.isLoading = false;
-      });
-  }
-
-  preview() {
-    window.open(`https://indusre.com/blog/${this.blog_id}`, "_blank");
-  }
+  ngOnInit() {}
 
   editImg(img, type): void {
     const dialogRef = this.dialog.open(AddImgDialog, {
@@ -134,54 +111,62 @@ export class BlogViewComponent implements OnInit {
   }
 
   save() {
-    const formdata: FormData = new FormData();
-    let updating_imgs: number = 0;
-    this.saving = true;
+    if (
+      this.blog_title != "" &&
+      this.blog_desc != "" &&
+      this.main_img != "assets/img/add-image.png" &&
+      this.thumbnail_img != "assets/img/add-image.png"
+    ) {
+      const blog_id = uuid.v4();
+      const formdata: FormData = new FormData();
+      this.saving = true;
 
-    var data = {
-      title: this.blogData.blogs_title,
-      date: new Date(),
-      desc: this.blogData.blogs_description,
-    };
+      var data = {
+        title: this.blog_title,
+        date: new Date(),
+        desc: this.blog_desc,
+        thumbnail: `${blog_id}_thumbnail.${
+          this.thumbnail_img_file.name.split(".")[
+            this.thumbnail_img_file.name.split(".").length - 1
+          ]
+        }`,
+        mainImg: `${blog_id}_main.${
+          this.main_img_file.name.split(".")[
+            this.main_img_file.name.split(".").length - 1
+          ]
+        }`,
+      };
 
-    this.blogsService
-      .updateBlog(this.blog_id, data)
-      .subscribe((res) => {
-        console.log(res);
-      })
-      .add(() => {
-        this.saving = false;
-        this.openSnackBar("Blog successfully edited!");
-      });
+      this.newsService
+        .addNewNews(data)
+        .subscribe((res) => {
+          console.log(res);
+        })
+        .add(() => {
+          this.saving = false;
+          this.openSnackBar("Blog successfully added!");
+        });
 
-    if (new String(this.main_img).startsWith("data")) {
       formdata.append("img", this.main_img_file);
-      formdata.append("img_name", this.blogData.blogs_mainimage);
-      updating_imgs++;
-    }
-
-    if (new String(this.thumbnail_img).startsWith("data")) {
+      formdata.append("img_name", `${blog_id}_main`);
       formdata.append("thumb_img", this.thumbnail_img_file);
-      formdata.append("thumb_img_name", this.blogData.blogs_thumbnail);
-      updating_imgs++;
-    }
+      formdata.append("thumb_img_name", `${blog_id}_thumbnail`);
 
-    if (updating_imgs > 0) {
       this.uploading = true;
-      console.log("imgs edited..");
       this.openSnackBar(`Blog image updating ${this.uploading_progress}%`);
-      this.blogsService
-        .updateBlogImg(formdata)
+      this.newsService
+        .updateNewsImg(formdata)
         .pipe(
           map((event) => this.getEventMessage(event)),
-          tap((message) => {}),
+          tap((message) => {
+            if (message == "File is 100% uploaded.") {
+              this.uploading = false;
+              this.openSnackBar("Blog image successfully updated!");
+            }
+          }),
           last()
         )
-        .subscribe((v) => {
-          if (this.uploading_progress == 100) {
-            this.openSnackBar("Blog image successfully updated!");
-          }
-        });
+        .subscribe((v) => {});
     }
   }
 

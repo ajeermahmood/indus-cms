@@ -47,4 +47,62 @@ export class NewsService {
         })
       );
   }
+
+  updateNews(id: any, data: any) {
+    const url = `${API_URL}/update_news.php`;
+    return this.http
+      .post<any>(
+        url,
+        JSON.stringify({
+          id: id,
+          data: data,
+        })
+      )
+      .pipe(
+        map((data) => {
+          return data;
+        })
+      );
+  }
+  addNewNews(data: any) {
+    const url = `${API_URL}/add_new_news.php`;
+    return this.http
+      .post<any>(
+        url,
+        JSON.stringify({
+          data: data,
+        })
+      )
+      .pipe(
+        map((data) => {
+          return data;
+        })
+      );
+  }
+
+  deleteNews(id: any, mainImg: any, thumbnail: any) {
+    const url = `${API_URL}/delete_news.php`;
+    return this.http
+      .post<any>(
+        url,
+        JSON.stringify({
+          id: id,
+          mainImg: mainImg,
+          thumbnail: thumbnail,
+        })
+      )
+      .pipe(
+        map((data) => {
+          return data;
+        })
+      );
+  }
+
+  updateNewsImg(data: any) {
+    const url = `${API_URL}/update_img.php`;
+    const req = new HttpRequest("POST", url, data, {
+      reportProgress: true,
+    });
+    return this.http.request(req);
+  }
 }

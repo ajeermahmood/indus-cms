@@ -3,30 +3,30 @@ import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatRippleModule } from "@angular/material/core";
+import { MatDialogModule } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatIconModule } from "@angular/material/icon";
 import { MatInputModule } from "@angular/material/input";
+import { MatMenuModule } from "@angular/material/menu";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatSelectModule } from "@angular/material/select";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { RouterModule } from "@angular/router";
+import { EditorModule } from "@tinymce/tinymce-angular";
+import { AddNewBlogComponent } from "app/pages/add-new-blog/add-new-blog.component";
+import { AddNewNewsComponent } from "app/pages/add-new-news/add-new-news.component";
 import { BlogViewComponent } from "app/pages/blog-view/blog-view.component";
 import { BlogsComponent } from "app/pages/blogs/blogs.component";
-import { DashboardComponent } from "../../dashboard/dashboard.component";
-import { IconsComponent } from "../../icons/icons.component";
-import { MapsComponent } from "../../maps/maps.component";
-import { NotificationsComponent } from "../../notifications/notifications.component";
-import { TableListComponent } from "../../table-list/table-list.component";
-import { TypographyComponent } from "../../typography/typography.component";
-import { UserProfileComponent } from "../../user-profile/user-profile.component";
-import { AdminLayoutRoutes } from "./admin-layout.routing";
-import { EditorModule } from "@tinymce/tinymce-angular";
+import { CautionDialog } from "app/pages/common/caution-dialog/caution-dialog.component";
+import { NewsViewComponent } from "app/pages/news-view/news-view.component";
 import { NewsComponent } from "app/pages/news/news.component";
 import { NgxSkeletonLoaderModule } from "ngx-skeleton-loader";
-import { NewsViewComponent } from "app/pages/news-view/news-view.component";
-import { MatDialogModule } from "@angular/material/dialog";
+import { DashboardComponent } from "../../dashboard/dashboard.component";
+import { AdminLayoutRoutes } from "./admin-layout.routing";
 
 @NgModule({
   imports: [
@@ -47,19 +47,19 @@ import { MatDialogModule } from "@angular/material/dialog";
     EditorModule,
     NgxSkeletonLoaderModule,
     MatDialogModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatMenuModule,
   ],
   declarations: [
     DashboardComponent,
-    UserProfileComponent,
-    TableListComponent,
-    TypographyComponent,
-    IconsComponent,
-    MapsComponent,
-    NotificationsComponent,
     BlogsComponent,
     BlogViewComponent,
     NewsComponent,
     NewsViewComponent,
+    AddNewBlogComponent,
+    AddNewNewsComponent,
+    CautionDialog,
   ],
 })
 export class AdminLayoutModule {}
