@@ -8,8 +8,10 @@ import { NewsViewComponent } from "app/pages/news-view/news-view.component";
 import { NewsComponent } from "app/pages/news/news.component";
 import { DashboardComponent } from "../../pages/dashboard/dashboard.component";
 import { MainSliderComponent } from "app/pages/main-slider/main-slider.component";
+import { LoginComponent } from "app/pages/login/login.component";
 
 export const AdminLayoutRoutes: Routes = [
+  { path: "login", component: LoginComponent },
   { path: "dashboard", component: DashboardComponent },
   { path: "blogs", component: BlogsComponent },
   { path: "blog-view", component: BlogViewComponent },

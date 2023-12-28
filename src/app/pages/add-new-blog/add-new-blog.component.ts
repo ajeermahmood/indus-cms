@@ -6,6 +6,8 @@ import { HttpEvent, HttpEventType } from "@angular/common/http";
 import { last, map, tap } from "rxjs";
 import * as uuid from "uuid";
 import { AddImgDialog } from "app/components/add-img-dialog/add-img-dialog.component";
+import { Router } from "@angular/router";
+import { AuthService } from "app/services/auth.service";
 
 @Component({
   selector: "app-add-new-blog",
@@ -29,8 +31,14 @@ export class AddNewBlogComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private blogsService: BlogsService
+    private blogsService: BlogsService,
+    private authService: AuthService,
+    private router: Router
   ) {
+    if (!this.authService.currentUserValue) {
+      this.router.navigate(["/login"]);
+    }
+
     this.tinyMceConfig = {
       height: 500,
       // menubar: true,

@@ -2,7 +2,9 @@ import { HttpEvent, HttpEventType } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { Router } from "@angular/router";
 import { AddImgDialog } from "app/components/add-img-dialog/add-img-dialog.component";
+import { AuthService } from "app/services/auth.service";
 import { NewsService } from "app/services/news.service";
 import { last, map, tap } from "rxjs";
 import * as uuid from "uuid";
@@ -29,8 +31,15 @@ export class AddNewNewsComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private newsService: NewsService
+    private newsService: NewsService,
+    private authService: AuthService,
+    private router: Router
   ) {
+
+    if (!this.authService.currentUserValue) {
+      this.router.navigate(["/login"]);
+    }
+
     this.tinyMceConfig = {
       height: 500,
       // menubar: true,

@@ -7,6 +7,7 @@ import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { CautionDialog } from "app/components/caution-dialog/caution-dialog.component";
+import { AuthService } from "app/services/auth.service";
 import { NewsService } from "app/services/news.service";
 
 @Component({
@@ -27,8 +28,13 @@ export class NewsComponent implements OnInit {
     private newsService: NewsService,
     private router: Router,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar
-  ) {}
+    private _snackBar: MatSnackBar,
+    private authService: AuthService,
+  ) {
+    if (!this.authService.currentUserValue) {
+      this.router.navigate(["/login"]);
+    }
+  }
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;

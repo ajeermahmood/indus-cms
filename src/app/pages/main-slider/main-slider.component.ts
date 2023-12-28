@@ -3,9 +3,11 @@ import { HttpEvent, HttpEventType } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { Router } from "@angular/router";
 import { AddNewSliderImgDialog } from "app/components/add-new-slider-img-dialog/add-new-slider-img-dialog.component";
 import { CautionDialog } from "app/components/caution-dialog/caution-dialog.component";
 import { EditSliderImgDialog } from "app/components/edit-slider-img-dialog/edit-slider-img-dialog.component";
+import { AuthService } from "app/services/auth.service";
 import { MainSliderService } from "app/services/main-slider.service";
 import { last, map, tap } from "rxjs";
 import * as uuid from "uuid";
@@ -27,8 +29,14 @@ export class MainSliderComponent implements OnInit {
   constructor(
     private mainSliderServices: MainSliderService,
     private dialog: MatDialog,
-    private _snackBar: MatSnackBar
-  ) {}
+    private _snackBar: MatSnackBar,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    if (!this.authService.currentUserValue) {
+      this.router.navigate(["/login"]);
+    }
+  }
 
   ngOnInit() {
     this.mainSliderServices

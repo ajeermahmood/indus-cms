@@ -1,11 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { BlogsService } from "app/services/blog.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpEvent, HttpEventType } from "@angular/common/http";
 import { last, map, tap } from "rxjs";
 import { AddImgDialog } from "app/components/add-img-dialog/add-img-dialog.component";
+import { AuthService } from "app/services/auth.service";
 
 @Component({
   selector: "app-blog-view",
@@ -33,8 +34,14 @@ export class BlogViewComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private blogsService: BlogsService,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private authService: AuthService,
+    private router: Router
   ) {
+    if (!this.authService.currentUserValue) {
+      this.router.navigate(["/login"]);
+    }
+
     this.route.queryParams.subscribe((res) => {
       this.blog_id = res.id;
     });

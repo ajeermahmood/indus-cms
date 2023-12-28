@@ -1,6 +1,7 @@
 import { Location } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { ROUTES } from "../sidebar/sidebar.component";
+import { AuthService } from "app/services/auth.service";
 
 @Component({
   selector: "app-navbar",
@@ -12,7 +13,7 @@ export class NavbarComponent implements OnInit {
   location: Location;
   mobile_menu_visible: any = 0;
 
-  constructor(location: Location) {
+  constructor(location: Location, private authService: AuthService) {
     this.location = location;
   }
 
@@ -32,5 +33,9 @@ export class NavbarComponent implements OnInit {
       }
     }
     return "Dashboard";
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

@@ -28,6 +28,7 @@ import { DashboardComponent } from "../../pages/dashboard/dashboard.component";
 import { AdminLayoutRoutes } from "./admin-layout.routing";
 import { DragDropModule } from "@angular/cdk/drag-drop";
 import { MainSliderComponent } from "app/pages/main-slider/main-slider.component";
+import { LoginComponent } from "app/pages/login/login.component";
 
 @NgModule({
   imports: [
@@ -62,6 +63,7 @@ import { MainSliderComponent } from "app/pages/main-slider/main-slider.component
     AddNewBlogComponent,
     AddNewNewsComponent,
     MainSliderComponent,
+    LoginComponent,
   ],
 })
 export class AdminLayoutModule {}

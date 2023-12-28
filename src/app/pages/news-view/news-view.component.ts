@@ -1,11 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { NewsService } from "app/services/news.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { last, map, tap } from "rxjs";
 import { HttpEvent, HttpEventType } from "@angular/common/http";
 import { AddImgDialog } from "app/components/add-img-dialog/add-img-dialog.component";
+import { AuthService } from "app/services/auth.service";
 
 @Component({
   selector: "app-news-view",
@@ -32,8 +33,14 @@ export class NewsViewComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private newsService: NewsService,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private authService: AuthService,
+    private router: Router
   ) {
+    if (!this.authService.currentUserValue) {
+      this.router.navigate(["/login"]);
+    }
+
     this.route.queryParams.subscribe((res) => {
       this.news_id = res.id;
     });

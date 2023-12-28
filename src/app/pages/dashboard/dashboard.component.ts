@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { AuthService } from "app/services/auth.service";
 import { DashboardService } from "app/services/dashboard.service";
 
 @Component({
@@ -10,7 +12,15 @@ export class DashboardComponent implements OnInit {
   blogs_count: any = 0;
   news_count: any = 0;
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(
+    private dashboardService: DashboardService,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    if (!this.authService.currentUserValue) {
+      this.router.navigate(["/login"]);
+    }
+  }
 
   ngOnInit() {
     this.dashboardService.getallStats().subscribe((data) => {
