@@ -6,8 +6,8 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Route, Router } from "@angular/router";
+import { CautionDialog } from "app/components/caution-dialog/caution-dialog.component";
 import { BlogsService } from "app/services/blog.service";
-import { CautionDialog } from "../common/caution-dialog/caution-dialog.component";
 
 @Component({
   selector: "app-blogs",

@@ -21,12 +21,13 @@ import { AddNewBlogComponent } from "app/pages/add-new-blog/add-new-blog.compone
 import { AddNewNewsComponent } from "app/pages/add-new-news/add-new-news.component";
 import { BlogViewComponent } from "app/pages/blog-view/blog-view.component";
 import { BlogsComponent } from "app/pages/blogs/blogs.component";
-import { CautionDialog } from "app/pages/common/caution-dialog/caution-dialog.component";
 import { NewsViewComponent } from "app/pages/news-view/news-view.component";
 import { NewsComponent } from "app/pages/news/news.component";
 import { NgxSkeletonLoaderModule } from "ngx-skeleton-loader";
-import { DashboardComponent } from "../../dashboard/dashboard.component";
+import { DashboardComponent } from "../../pages/dashboard/dashboard.component";
 import { AdminLayoutRoutes } from "./admin-layout.routing";
+import { DragDropModule } from "@angular/cdk/drag-drop";
+import { MainSliderComponent } from "app/pages/main-slider/main-slider.component";
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { AdminLayoutRoutes } from "./admin-layout.routing";
     MatSnackBarModule,
     MatIconModule,
     MatMenuModule,
+    DragDropModule,
   ],
   declarations: [
     DashboardComponent,
@@ -59,7 +61,7 @@ import { AdminLayoutRoutes } from "./admin-layout.routing";
     NewsViewComponent,
     AddNewBlogComponent,
     AddNewNewsComponent,
-    CautionDialog,
+    MainSliderComponent,
   ],
 })
 export class AdminLayoutModule {}

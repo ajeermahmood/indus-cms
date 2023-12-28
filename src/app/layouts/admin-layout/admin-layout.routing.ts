@@ -6,7 +6,8 @@ import { BlogViewComponent } from "app/pages/blog-view/blog-view.component";
 import { BlogsComponent } from "app/pages/blogs/blogs.component";
 import { NewsViewComponent } from "app/pages/news-view/news-view.component";
 import { NewsComponent } from "app/pages/news/news.component";
-import { DashboardComponent } from "../../dashboard/dashboard.component";
+import { DashboardComponent } from "../../pages/dashboard/dashboard.component";
+import { MainSliderComponent } from "app/pages/main-slider/main-slider.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "dashboard", component: DashboardComponent },
@@ -16,4 +17,5 @@ export const AdminLayoutRoutes: Routes = [
   { path: "news", component: NewsComponent },
   { path: "news-view", component: NewsViewComponent },
   { path: "add-new-news", component: AddNewNewsComponent },
+  { path: "main-slider", component: MainSliderComponent },
 ];

@@ -2,10 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute } from "@angular/router";
 import { NewsService } from "app/services/news.service";
-import { AddImgDialog } from "../common/add-img-dialog/add-img-dialog.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { last, map, tap } from "rxjs";
 import { HttpEvent, HttpEventType } from "@angular/common/http";
+import { AddImgDialog } from "app/components/add-img-dialog/add-img-dialog.component";
 
 @Component({
   selector: "app-news-view",
@@ -166,6 +166,7 @@ export class NewsViewComponent implements OnInit {
     }
 
     if (updating_imgs > 0) {
+      formdata.append("type", "old");
       this.uploading = true;
       console.log("imgs edited..");
       this.openSnackBar(`Blog image updating ${this.uploading_progress}%`);

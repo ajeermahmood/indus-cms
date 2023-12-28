@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { AddImgDialog } from "../common/add-img-dialog/add-img-dialog.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { BlogsService } from "app/services/blog.service";
 import { HttpEvent, HttpEventType } from "@angular/common/http";
 import { last, map, tap } from "rxjs";
 import * as uuid from "uuid";
+import { AddImgDialog } from "app/components/add-img-dialog/add-img-dialog.component";
 
 @Component({
   selector: "app-add-new-blog",
@@ -150,6 +150,8 @@ export class AddNewBlogComponent implements OnInit {
       formdata.append("img_name", `${blog_id}_main`);
       formdata.append("thumb_img", this.thumbnail_img_file);
       formdata.append("thumb_img_name", `${blog_id}_thumbnail`);
+
+      formdata.append("type", "new");
 
       this.uploading = true;
       this.openSnackBar(`Blog image updating ${this.uploading_progress}%`);

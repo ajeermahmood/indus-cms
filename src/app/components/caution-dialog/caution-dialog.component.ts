@@ -30,6 +30,19 @@ export class CautionDialog implements OnInit {
     });
   }
 
+  getNameByType(type) {
+    switch (type) {
+      case "blog":
+        return "Blog";
+      case "news":
+        return "News";
+      case "main_slider":
+        return "Main Slider";
+      default:
+        return "";
+    }
+  }
+
   submit() {
     this.dialogRef.close({
       delete: true,

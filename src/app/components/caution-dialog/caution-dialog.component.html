@@ -31,7 +31,7 @@
   <div class="card-body position-relative" style="padding: 1.5rem 1.5rem">
     <h3 class="mt-0">Are you sure?</h3>
     <p>
-      The {{ type == "blog" ? "blog" : "news" }} "<i
+      The {{ getNameByType(type) }} "<i
         ><b>{{ data.title }}</b></i
       >" will be permenently deleted.
     </p>
