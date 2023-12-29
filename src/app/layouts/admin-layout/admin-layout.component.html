@@ -22,14 +22,17 @@
 
 <div
   class="wrapper"
-  *ngIf="isUserSignedOut == true && isLogoutProcessing == false"
+  *ngIf="isUserSignedOut == true"
 >
-  <div class="main-panel" style="align-items: normal; width: calc(100%) !important;">
+  <div
+    class="main-panel"
+    style="align-items: normal; width: calc(100%) !important"
+  >
     <router-outlet (activate)="onActivate($event)"></router-outlet>
   </div>
 </div>
 
-<div class="wrapper" *ngIf="isLogoutProcessing == true">
+<!-- <div class="wrapper" *ngIf="isLogoutProcessing == true">
   <div
     [ngStyle]="{
       height: '900px',
@@ -41,4 +44,4 @@
   >
     <span class="spinner-border spinner-border-m mr-2"> </span>
   </div>
-</div>
+</div> -->

@@ -9,6 +9,7 @@ import { NewsComponent } from "app/pages/news/news.component";
 import { DashboardComponent } from "../../pages/dashboard/dashboard.component";
 import { MainSliderComponent } from "app/pages/main-slider/main-slider.component";
 import { LoginComponent } from "app/pages/login/login.component";
+import { AdBannerComponent } from "app/pages/ad-banner/ad-banner.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "login", component: LoginComponent },
@@ -20,4 +21,5 @@ export const AdminLayoutRoutes: Routes = [
   { path: "news-view", component: NewsViewComponent },
   { path: "add-new-news", component: AddNewNewsComponent },
   { path: "main-slider", component: MainSliderComponent },
+  { path: "ad-banner", component: AdBannerComponent },
 ];

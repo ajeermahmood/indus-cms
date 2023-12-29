@@ -4,20 +4,20 @@ import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
-import { AddNewSliderImgDialog } from "app/components/add-new-slider-img-dialog/add-new-slider-img-dialog.component";
+import { AddNewAdBannerDialog } from "app/components/add-new-ad-banner-dialog/add-new-ad-banner-dialog.component";
 import { CautionDialog } from "app/components/caution-dialog/caution-dialog.component";
-import { EditSliderImgDialog } from "app/components/edit-slider-img-dialog/edit-slider-img-dialog.component";
+import { EditAdBannerDialog } from "app/components/edit-ad-banner-dialog/edit-ad-banner-dialog.component";
+import { AdBannerService } from "app/services/ad-banner.service";
 import { AuthService } from "app/services/auth.service";
-import { MainSliderService } from "app/services/main-slider.service";
 import { last, map, tap } from "rxjs";
 import * as uuid from "uuid";
 
 @Component({
-  selector: "app-main-slider",
-  templateUrl: "./main-slider.component.html",
-  styleUrls: ["./main-slider.component.scss"],
+  selector: "app-ad-banner",
+  templateUrl: "./ad-banner.component.html",
+  styleUrls: ["./ad-banner.component.scss"],
 })
-export class MainSliderComponent implements OnInit {
+export class AdBannerComponent implements OnInit {
   isLoading: boolean = true;
 
   dataSource = [];
@@ -27,7 +27,7 @@ export class MainSliderComponent implements OnInit {
   uploading_progress: any = 0;
   uploading: boolean = false;
   constructor(
-    private mainSliderServices: MainSliderService,
+    private adBannerServices: AdBannerService,
     private dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private authService: AuthService,
@@ -39,7 +39,7 @@ export class MainSliderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.mainSliderServices
+    this.adBannerServices
       .getallImages()
       .subscribe((data) => {
         this.dataSource = data;
@@ -51,7 +51,7 @@ export class MainSliderComponent implements OnInit {
 
   revertOrder() {
     this.isLoading = true;
-    this.mainSliderServices
+    this.adBannerServices
       .getallImages()
       .subscribe((data) => {
         this.dataSource = data;
@@ -84,7 +84,7 @@ export class MainSliderComponent implements OnInit {
 
   updateSortOrder() {
     if (this.not_saved_order == true) {
-      this.mainSliderServices
+      this.adBannerServices
         .updateSortOrder(this.dataSource)
         .subscribe((data) => {
           if (data) {
@@ -97,44 +97,48 @@ export class MainSliderComponent implements OnInit {
     }
   }
 
-  delete(slider) {
+  delete(banner) {
     const dialogRef = this.dialog.open(CautionDialog, {
       width: "40rem",
       height: "17rem",
       data: {
-        id: slider.id,
-        title: slider.name,
-        type: "main_slider",
+        id: banner.id,
+        title: banner.title,
+        type: "ad_banner",
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result != undefined && result.delete == true) {
-        this.mainSliderServices
-          .deleteSlider(slider.id, slider.img)
+        this.adBannerServices
+          .deleteBanner(
+            banner.id,
+            new String(banner.image).split("banners/")[1]
+          )
           .subscribe((res) => {
-            this.openSnackBar("Slider deleted successfully");
+            this.openSnackBar("Project deleted successfully");
             this.revertOrder();
           });
       }
     });
   }
 
-  edit(slider) {
-    const dialogRef = this.dialog.open(EditSliderImgDialog, {
+  edit(banner) {
+    const dialogRef = this.dialog.open(EditAdBannerDialog, {
       width: "43rem",
-      height: "40rem",
+      height: "45rem",
       data: {
-        id: slider.id,
-        name: slider.name,
-        img: `https://indusre.com/main_slider/${slider.img}`,
+        id: banner.id,
+        title: banner.title,
+        subtitle: banner.subtitle,
+        img: banner.image,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result != undefined) {
-        this.mainSliderServices
-          .updateSlider(slider.id, result.name)
+        this.adBannerServices
+          .updateBanner(banner.id, result.title, result.subtitle)
           .subscribe((data) => {})
           .add(() => {
             if (!result.img_changed) {
@@ -146,10 +150,13 @@ export class MainSliderComponent implements OnInit {
           this.uploading = true;
           const formdata: FormData = new FormData();
           formdata.append("img", result.file);
-          formdata.append("img_name", slider.img);
+          formdata.append(
+            "img_name",
+            new String(banner.image).split("banners/")[1]
+          );
           formdata.append("type", "old");
 
-          this.mainSliderServices
+          this.adBannerServices
             .updateImg(formdata)
             .pipe(
               map((event) => this.getEventMessage(event)),
@@ -168,10 +175,10 @@ export class MainSliderComponent implements OnInit {
     });
   }
 
-  addNewSlider() {
-    const dialogRef = this.dialog.open(AddNewSliderImgDialog, {
+  addNewBanner() {
+    const dialogRef = this.dialog.open(AddNewAdBannerDialog, {
       width: "43rem",
-      height: "40rem",
+      height: "45rem",
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -180,21 +187,22 @@ export class MainSliderComponent implements OnInit {
         const random_id = uuid.v4();
         const formdata: FormData = new FormData();
         const data = {
-          img: `${random_id}.${
+          img: `https://www.indusre.com/mobile-app/assets/banners/${random_id}.${
             result.file.name.split(".")[result.file.name.split(".").length - 1]
           }`,
-          name: result.name,
+          title: result.title,
+          subtitle: result.subtitle,
         };
 
         formdata.append("img", result.file);
         formdata.append("img_name", `${random_id}`);
         formdata.append("type", "new");
 
-        this.mainSliderServices.addNewSlider(data).subscribe((data) => {
+        this.adBannerServices.addNewBanner(data).subscribe((data) => {
           console.log(data);
         });
 
-        this.mainSliderServices
+        this.adBannerServices
           .updateImg(formdata)
           .pipe(
             map((event) => this.getEventMessage(event)),

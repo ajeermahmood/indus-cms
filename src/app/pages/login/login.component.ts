@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   wrong_credential: boolean = false;
   constructor(private authService: AuthService, private router: Router) {
     if (this.authService.currentUserValue) {
-      this.router.navigate(["/dashboard"]);
+      this.router.navigate(["/"]);
     }
   }
   ngOnInit() {}
@@ -27,10 +27,8 @@ export class LoginComponent implements OnInit {
         .login(this.username, this.password)
         .subscribe((res) => {
           if (res != "invalid-user") {
+            this.router.navigate(["/dashboard"]);
             location.reload();
-            setTimeout(() => {
-              this.router.navigate(["/dashboard"]);
-            }, 1000);
           } else {
             this.wrong_credential = true;
 

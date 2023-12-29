@@ -13,6 +13,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { EditSliderImgDialog } from "./edit-slider-img-dialog/edit-slider-img-dialog.component";
+import { AddNewAdBannerDialog } from "./add-new-ad-banner-dialog/add-new-ad-banner-dialog.component";
+import { EditAdBannerDialog } from "./edit-ad-banner-dialog/edit-ad-banner-dialog.component";
 
 @NgModule({
   imports: [
@@ -32,6 +34,8 @@ import { EditSliderImgDialog } from "./edit-slider-img-dialog/edit-slider-img-di
     AddImgDialog,
     AddNewSliderImgDialog,
     EditSliderImgDialog,
+    AddNewAdBannerDialog,
+    EditAdBannerDialog,
   ],
   exports: [
     FooterComponent,
@@ -41,6 +45,8 @@ import { EditSliderImgDialog } from "./edit-slider-img-dialog/edit-slider-img-di
     AddImgDialog,
     AddNewSliderImgDialog,
     EditSliderImgDialog,
+    AddNewAdBannerDialog,
+    EditAdBannerDialog,
   ],
 })
 export class ComponentsModule {}
