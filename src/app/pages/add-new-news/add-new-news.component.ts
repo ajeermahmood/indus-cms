@@ -35,7 +35,6 @@ export class AddNewNewsComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {
-
     if (!this.authService.currentUserValue) {
       this.router.navigate(["/login"]);
     }
@@ -172,6 +171,9 @@ export class AddNewNewsComponent implements OnInit {
             if (message == "File is 100% uploaded.") {
               this.uploading = false;
               this.openSnackBar("Blog image successfully updated!");
+              setTimeout(() => {
+                this.router.navigate(["/news"]);
+              }, 500);
             }
           }),
           last()

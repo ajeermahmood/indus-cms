@@ -23,6 +23,7 @@ export const ROUTES: RouteInfo[] = [
   },
   { path: "/blogs", title: "Blogs", icon: "library_books", class: "" },
   { path: "/news", title: "News", icon: "newspaper", class: "" },
+  { path: "/popup-ad", title: "Popup Ad", icon: "aspect_ratio", class: "" },
 ];
 
 @Component({

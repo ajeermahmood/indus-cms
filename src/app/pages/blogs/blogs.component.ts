@@ -58,7 +58,26 @@ export class BlogsComponent implements OnInit {
     this.blogsService
       .getallBlogs(10, 1, "")
       .subscribe((res) => {
-        console.log(res);
+        this.allBlogs = new MatTableDataSource(res.blogs);
+        this.allBlogsCount = res.count;
+        setTimeout(() => {
+          if (this.allBlogs != undefined) {
+            this.allBlogs.paginator = this.paginator;
+            this.allBlogs.paginator.pageSize = 10;
+            this.allBlogs.sort = this.sort;
+          }
+        });
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  reloadPage() {
+    this.isLoading = true;
+    this.blogsService
+      .getallBlogs(10, 1, "")
+      .subscribe((res) => {
         this.allBlogs = new MatTableDataSource(res.blogs);
         this.allBlogsCount = res.count;
         setTimeout(() => {
@@ -109,7 +128,7 @@ export class BlogsComponent implements OnInit {
           .deleteBlog(blog.blogs_id, blog.blogs_mainimage, blog.blogs_thumbnail)
           .subscribe((res) => {
             this.openSnackBar("Blog deleted successfully");
-            location.reload();
+            this.reloadPage();
           });
       }
     });

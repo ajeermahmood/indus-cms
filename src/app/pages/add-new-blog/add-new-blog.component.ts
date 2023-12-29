@@ -171,6 +171,10 @@ export class AddNewBlogComponent implements OnInit {
             if (message == "File is 100% uploaded.") {
               this.uploading = false;
               this.openSnackBar("Blog image successfully updated!");
+
+              setTimeout(() => {
+                this.router.navigate(["/blogs"]);
+              }, 500);
             }
           }),
           last()

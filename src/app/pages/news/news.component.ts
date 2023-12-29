@@ -29,7 +29,7 @@ export class NewsComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
     if (!this.authService.currentUserValue) {
       this.router.navigate(["/login"]);
@@ -58,7 +58,25 @@ export class NewsComponent implements OnInit {
     this.newsService
       .getallNews(10, 1, "")
       .subscribe((res) => {
-        console.log(res);
+        this.allNews = new MatTableDataSource(res.blogs);
+        this.allNewsCount = res.count;
+        setTimeout(() => {
+          if (this.allNews != undefined) {
+            // this.allNews.paginator = this.paginator;
+            this.allNews.sort = this.sort;
+          }
+        });
+      })
+      .add(() => {
+        this.isLoading = false;
+      });
+  }
+
+  reloadPage() {
+    this.isLoading = true;
+    this.newsService
+      .getallNews(10, 1, "")
+      .subscribe((res) => {
         this.allNews = new MatTableDataSource(res.blogs);
         this.allNewsCount = res.count;
         setTimeout(() => {
@@ -109,7 +127,7 @@ export class NewsComponent implements OnInit {
           .deleteNews(news.news_id, news.news_mainimage, news.news_thumbnail)
           .subscribe((res) => {
             this.openSnackBar("News deleted successfully");
-            location.reload();
+            this.reloadPage();
           });
       }
     });

@@ -30,6 +30,7 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 import { MainSliderComponent } from "app/pages/main-slider/main-slider.component";
 import { LoginComponent } from "app/pages/login/login.component";
 import { AdBannerComponent } from "app/pages/ad-banner/ad-banner.component";
+import { PopupAdComponent } from "app/pages/popup-ad/popup-ad.component";
 
 @NgModule({
   imports: [
@@ -65,6 +66,7 @@ import { AdBannerComponent } from "app/pages/ad-banner/ad-banner.component";
     AddNewNewsComponent,
     MainSliderComponent,
     AdBannerComponent,
+    PopupAdComponent,
     LoginComponent,
   ],
 })
