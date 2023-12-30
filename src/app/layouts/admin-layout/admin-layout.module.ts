@@ -31,6 +31,11 @@ import { MainSliderComponent } from "app/pages/main-slider/main-slider.component
 import { LoginComponent } from "app/pages/login/login.component";
 import { AdBannerComponent } from "app/pages/ad-banner/ad-banner.component";
 import { PopupAdComponent } from "app/pages/popup-ad/popup-ad.component";
+import { TeamComponent } from "app/pages/team/team.component";
+import { AddNewTeamMemberComponent } from "app/pages/add-new-team-member/add-new-team-member.component";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatNativeDateModule } from "@angular/material/core";
+import { EditTeamMemberComponent } from "app/pages/edit-team-member/edit-team-member.component";
 
 @NgModule({
   imports: [
@@ -55,8 +60,11 @@ import { PopupAdComponent } from "app/pages/popup-ad/popup-ad.component";
     MatIconModule,
     MatMenuModule,
     DragDropModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   declarations: [
+    LoginComponent,
     DashboardComponent,
     BlogsComponent,
     BlogViewComponent,
@@ -67,7 +75,9 @@ import { PopupAdComponent } from "app/pages/popup-ad/popup-ad.component";
     MainSliderComponent,
     AdBannerComponent,
     PopupAdComponent,
-    LoginComponent,
+    TeamComponent,
+    AddNewTeamMemberComponent,
+    EditTeamMemberComponent
   ],
 })
 export class AdminLayoutModule {}

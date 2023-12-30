@@ -39,7 +39,9 @@ export class CautionDialog implements OnInit {
       case "main_slider":
         return "Main Slider";
       case "ad_banner":
-        return "Featured project";
+        return "Featured Project";
+      case "team":
+        return "Team Member";
       default:
         return "";
     }

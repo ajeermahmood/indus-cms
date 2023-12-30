@@ -31,7 +31,11 @@ export class AdminLayoutComponent implements OnInit {
   ) {
     if (this.authService.currentUserValue) {
       this.isUserSignedOut = false;
-      this.router.navigate(["/dashboard"]);
+      if (router.url == "/login") {
+        this.router.navigate(["/dashboard"]);
+      } else {
+        this.router.navigate([router.url]);
+      }
     } else {
       this.isUserSignedOut = true;
       this.router.navigate(["/login"]);

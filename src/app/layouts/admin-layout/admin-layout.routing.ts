@@ -11,6 +11,9 @@ import { MainSliderComponent } from "app/pages/main-slider/main-slider.component
 import { LoginComponent } from "app/pages/login/login.component";
 import { AdBannerComponent } from "app/pages/ad-banner/ad-banner.component";
 import { PopupAdComponent } from "app/pages/popup-ad/popup-ad.component";
+import { TeamComponent } from "app/pages/team/team.component";
+import { AddNewTeamMemberComponent } from "app/pages/add-new-team-member/add-new-team-member.component";
+import { EditTeamMemberComponent } from "app/pages/edit-team-member/edit-team-member.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "login", component: LoginComponent },
@@ -24,4 +27,7 @@ export const AdminLayoutRoutes: Routes = [
   { path: "main-slider", component: MainSliderComponent },
   { path: "ad-banner", component: AdBannerComponent },
   { path: "popup-ad", component: PopupAdComponent },
+  { path: "team", component: TeamComponent },
+  { path: "add-new-team-member", component: AddNewTeamMemberComponent },
+  { path: "edit-team-member", component: EditTeamMemberComponent },
 ];

@@ -5,27 +5,27 @@ import { MatPaginator } from "@angular/material/paginator";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
-import { Route, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { CautionDialog } from "app/components/caution-dialog/caution-dialog.component";
 import { AuthService } from "app/services/auth.service";
-import { BlogsService } from "app/services/blog.service";
+import { TeamService } from "app/services/team.service";
 
 @Component({
-  selector: "app-blogs",
-  templateUrl: "./blogs.component.html",
-  styleUrls: ["./blogs.component.scss"],
+  selector: "app-team",
+  templateUrl: "./team.component.html",
+  styleUrls: ["./team.component.scss"],
 })
-export class BlogsComponent implements OnInit {
-  displayedColumns: string[] = ["id", "title", "date", "action"];
+export class TeamComponent implements OnInit {
+  displayedColumns: string[] = ["id", "name", "email", "dsgtn", "action"];
 
-  allBlogs: MatTableDataSource<any>;
-  allBlogsCount: any;
+  team: MatTableDataSource<any>;
+  teamCount: any;
   isLoading: boolean = true;
   pageChangeLoading: boolean = false;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
-    private blogsService: BlogsService,
+    private teamService: TeamService,
     private router: Router,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
@@ -55,14 +55,15 @@ export class BlogsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.blogsService
-      .getallBlogs(10, 1, "")
+    this.teamService
+      .getTeam(10, 1, "")
       .subscribe((res) => {
-        this.allBlogs = new MatTableDataSource(res.blogs);
-        this.allBlogsCount = res.count;
+        console.log(res);
+        this.team = new MatTableDataSource(res.team);
+        this.teamCount = res.count;
         setTimeout(() => {
-          if (this.allBlogs != undefined) {
-            this.allBlogs.sort = this.sort;
+          if (this.team != undefined) {
+            this.team.sort = this.sort;
           }
         });
       })
@@ -73,14 +74,14 @@ export class BlogsComponent implements OnInit {
 
   reloadPage() {
     this.isLoading = true;
-    this.blogsService
-      .getallBlogs(10, 1, "")
+    this.teamService
+      .getTeam(10, 1, "")
       .subscribe((res) => {
-        this.allBlogs = new MatTableDataSource(res.blogs);
-        this.allBlogsCount = res.count;
+        this.team = new MatTableDataSource(res.team);
+        this.teamCount = res.count;
         setTimeout(() => {
-          if (this.allBlogs != undefined) {
-            this.allBlogs.sort = this.sort;
+          if (this.team != undefined) {
+            this.team.sort = this.sort;
           }
         });
       })
@@ -98,32 +99,32 @@ export class BlogsComponent implements OnInit {
     });
   }
 
-  navigateToViewPage(blog: any) {
-    this.router.navigate(["/blog-view"], {
-      queryParams: { id: blog.blogs_id },
+  navigateToEditMemberPage(member: any) {
+    this.router.navigate(["/edit-team-member"], {
+      queryParams: { id: member.client_user_id },
     });
   }
-  navigateToAddNewBlogPage() {
-    this.router.navigate(["/add-new-blog"]);
+  navigateToAddNewMemberPage() {
+    this.router.navigate(["/add-new-team-member"]);
   }
 
-  delete(blog) {
+  delete(member) {
     const dialogRef = this.dialog.open(CautionDialog, {
       width: "40rem",
       height: "17rem",
       data: {
-        id: blog.blogs_id,
-        title: blog.blogs_title,
-        type: "blog",
+        id: member.client_user_id,
+        title: member.client_user_name,
+        type: "team",
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result != undefined && result.delete == true) {
-        this.blogsService
-          .deleteBlog(blog.blogs_id, blog.blogs_mainimage, blog.blogs_thumbnail)
+        this.teamService
+          .deleteMember(member.client_user_id, member.client_user_image)
           .subscribe((res) => {
-            this.openSnackBar("Blog deleted successfully");
+            this.openSnackBar("Team member deleted successfully");
             this.reloadPage();
           });
       }
@@ -132,10 +133,10 @@ export class BlogsComponent implements OnInit {
 
   pageChange(event) {
     this.pageChangeLoading = true;
-    this.blogsService
-      .getallBlogs(event.pageSize, event.pageIndex + 1, "")
+    this.teamService
+      .getTeam(event.pageSize, event.pageIndex + 1, "")
       .subscribe((res) => {
-        this.allBlogs = new MatTableDataSource(res.blogs);
+        this.team = new MatTableDataSource(res.team);
       })
       .add(() => {
         this.pageChangeLoading = false;
