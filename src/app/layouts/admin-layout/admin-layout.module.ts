@@ -36,6 +36,9 @@ import { AddNewTeamMemberComponent } from "app/pages/add-new-team-member/add-new
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatNativeDateModule } from "@angular/material/core";
 import { EditTeamMemberComponent } from "app/pages/edit-team-member/edit-team-member.component";
+import { DevelopersComponent } from "app/pages/developers/developers.component";
+import { AddNewDeveloperComponent } from "app/pages/add-new-developer/add-new-developer.component";
+import { EditDeveloperComponent } from "app/pages/edit-developer/edit-developer.component";
 
 @NgModule({
   imports: [
@@ -77,7 +80,10 @@ import { EditTeamMemberComponent } from "app/pages/edit-team-member/edit-team-me
     PopupAdComponent,
     TeamComponent,
     AddNewTeamMemberComponent,
-    EditTeamMemberComponent
+    EditTeamMemberComponent,
+    DevelopersComponent,
+    AddNewDeveloperComponent,
+    EditDeveloperComponent,
   ],
 })
 export class AdminLayoutModule {}

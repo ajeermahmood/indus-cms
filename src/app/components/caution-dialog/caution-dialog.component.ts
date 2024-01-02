@@ -42,6 +42,8 @@ export class CautionDialog implements OnInit {
         return "Featured Project";
       case "team":
         return "Team Member";
+      case "dev":
+        return "Developer";
       default:
         return "";
     }

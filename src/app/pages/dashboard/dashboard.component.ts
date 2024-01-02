@@ -11,6 +11,7 @@ import { DashboardService } from "app/services/dashboard.service";
 export class DashboardComponent implements OnInit {
   blogs_count: any = 0;
   news_count: any = 0;
+  users_count: any = 0;
 
   constructor(
     private dashboardService: DashboardService,
@@ -26,6 +27,7 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.getallStats().subscribe((data) => {
       this.blogs_count = data.blogs_count;
       this.news_count = data.news_count;
+      this.users_count = data.users_count;
     });
   }
 }

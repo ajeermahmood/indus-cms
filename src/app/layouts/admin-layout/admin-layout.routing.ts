@@ -14,6 +14,9 @@ import { PopupAdComponent } from "app/pages/popup-ad/popup-ad.component";
 import { TeamComponent } from "app/pages/team/team.component";
 import { AddNewTeamMemberComponent } from "app/pages/add-new-team-member/add-new-team-member.component";
 import { EditTeamMemberComponent } from "app/pages/edit-team-member/edit-team-member.component";
+import { DevelopersComponent } from "app/pages/developers/developers.component";
+import { AddNewDeveloperComponent } from "app/pages/add-new-developer/add-new-developer.component";
+import { EditDeveloperComponent } from "app/pages/edit-developer/edit-developer.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "login", component: LoginComponent },
@@ -30,4 +33,7 @@ export const AdminLayoutRoutes: Routes = [
   { path: "team", component: TeamComponent },
   { path: "add-new-team-member", component: AddNewTeamMemberComponent },
   { path: "edit-team-member", component: EditTeamMemberComponent },
+  { path: "developers", component: DevelopersComponent },
+  { path: "add-new-developer", component: AddNewDeveloperComponent },
+  { path: "edit-developer", component: EditDeveloperComponent },
 ];
