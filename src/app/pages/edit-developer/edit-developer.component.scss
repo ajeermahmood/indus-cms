@@ -87,8 +87,8 @@
   width: 10rem;
   margin-bottom: 10px;
   border-radius: 3%;
-  object-fit: cover;
-  object-position: top;
+  object-fit: contain;
+  object-position: center;
   border: 1px solid black;
 
 }

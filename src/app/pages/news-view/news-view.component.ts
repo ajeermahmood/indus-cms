@@ -118,14 +118,14 @@ export class NewsViewComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
-
-      if (type == "thumbnail") {
-        this.thumbnail_img = result.img;
-        this.thumbnail_img_file = result.file;
-      } else {
-        this.main_img = result.img;
-        this.main_img_file = result.file;
+      if (result != undefined) {
+        if (type == "thumbnail") {
+          this.thumbnail_img = result.img;
+          this.thumbnail_img_file = result.file;
+        } else {
+          this.main_img = result.img;
+          this.main_img_file = result.file;
+        }
       }
     });
   }

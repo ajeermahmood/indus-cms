@@ -8,7 +8,6 @@ import { AuthService } from "app/services/auth.service";
 import { DevelopersService } from "app/services/developers.service";
 
 import { last, map, tap } from "rxjs";
-import * as uuid from "uuid";
 
 @Component({
   selector: "app-edit-developer",
@@ -99,16 +98,16 @@ export class EditDeveloperComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
-
-      if (type == "main") {
-        this.main_img = result.img;
-        this.main_img_file = result.file;
-        this.main_img_changed = true;
-      } else {
-        this.about_img = result.img;
-        this.about_img_file = result.file;
-        this.about_img_changed = true;
+      if (result != undefined) {
+        if (type == "main") {
+          this.main_img = result.img;
+          this.main_img_file = result.file;
+          this.main_img_changed = true;
+        } else {
+          this.about_img = result.img;
+          this.about_img_file = result.file;
+          this.about_img_changed = true;
+        }
       }
     });
   }
@@ -128,7 +127,6 @@ export class EditDeveloperComponent implements OnInit {
       this.dev_short_desc != "" &&
       this.dev_long_desc != ""
     ) {
-      const random_id = uuid.v4();
       const formdata: FormData = new FormData();
       this.saving = true;
       var data = {
