@@ -26,6 +26,7 @@ export const ROUTES: RouteInfo[] = [
   { path: "/popup-ad", title: "Popup Ad", icon: "aspect_ratio", class: "" },
   { path: "/team", title: "Team", icon: "groups", class: "" },
   { path: "/developers", title: "Developers", icon: "domain", class: "" },
+  { path: "/videos", title: "Videos", icon: "movie", class: "" },
 ];
 
 @Component({

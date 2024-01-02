@@ -15,6 +15,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { EditSliderImgDialog } from "./edit-slider-img-dialog/edit-slider-img-dialog.component";
 import { AddNewAdBannerDialog } from "./add-new-ad-banner-dialog/add-new-ad-banner-dialog.component";
 import { EditAdBannerDialog } from "./edit-ad-banner-dialog/edit-ad-banner-dialog.component";
+import { AddNewVideoDialog } from "./add-new-video-dialog/add-new-video-dialog.component";
+import { EditVideoDialog } from "./edit-video-dialog/edit-video-dialog.component";
 
 @NgModule({
   imports: [
@@ -36,6 +38,8 @@ import { EditAdBannerDialog } from "./edit-ad-banner-dialog/edit-ad-banner-dialo
     EditSliderImgDialog,
     AddNewAdBannerDialog,
     EditAdBannerDialog,
+    AddNewVideoDialog,
+    EditVideoDialog,
   ],
   exports: [
     FooterComponent,
@@ -47,6 +51,8 @@ import { EditAdBannerDialog } from "./edit-ad-banner-dialog/edit-ad-banner-dialo
     EditSliderImgDialog,
     AddNewAdBannerDialog,
     EditAdBannerDialog,
+    AddNewVideoDialog,
+    EditVideoDialog,
   ],
 })
 export class ComponentsModule {}

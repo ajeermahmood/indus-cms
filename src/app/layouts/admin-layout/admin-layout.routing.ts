@@ -17,6 +17,7 @@ import { EditTeamMemberComponent } from "app/pages/edit-team-member/edit-team-me
 import { DevelopersComponent } from "app/pages/developers/developers.component";
 import { AddNewDeveloperComponent } from "app/pages/add-new-developer/add-new-developer.component";
 import { EditDeveloperComponent } from "app/pages/edit-developer/edit-developer.component";
+import { VideosComponent } from "app/pages/all-videos/all-videos.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "login", component: LoginComponent },
@@ -36,4 +37,5 @@ export const AdminLayoutRoutes: Routes = [
   { path: "developers", component: DevelopersComponent },
   { path: "add-new-developer", component: AddNewDeveloperComponent },
   { path: "edit-developer", component: EditDeveloperComponent },
+  { path: "videos", component: VideosComponent },
 ];
