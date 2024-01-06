@@ -7,25 +7,25 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
-import { AddNewVideoDialog } from "app/components/add-new-video-dialog/add-new-video-dialog.component";
+import { AddNewAchievementDialog } from "app/components/add-new-achievement-dialog/add-new-achievement-dialog.component";
 import { CautionDialog } from "app/components/caution-dialog/caution-dialog.component";
-import { EditVideoDialog } from "app/components/edit-video-dialog/edit-video-dialog.component";
+import { EditAchievementDialog } from "app/components/edit-achievement-dialog/edit-achievement-dialog.component";
 import { ImgViewDialog } from "app/components/img-view-dialog/img-view-dialog.component";
+import { AchievementsService } from "app/services/achievements.service";
 import { AuthService } from "app/services/auth.service";
-import { VideoService } from "app/services/videos.service";
 import { last, map, tap } from "rxjs";
 import * as uuid from "uuid";
 
 @Component({
-  selector: "app-videos",
-  templateUrl: "./all-videos.component.html",
-  styleUrls: ["./all-videos.component.scss"],
+  selector: "app-achievements",
+  templateUrl: "./achievements.component.html",
+  styleUrls: ["./achievements.component.scss"],
 })
-export class VideosComponent implements OnInit {
-  displayedColumns: string[] = ["id", "title", "img", "date", "action"];
+export class AchievementsComponent implements OnInit {
+  displayedColumns: string[] = ["id", "name", "award_by", "date", "action"];
 
-  videos: MatTableDataSource<any>;
-  videosCount: any;
+  achievements: MatTableDataSource<any>;
+  achievementsCount: any;
   isLoading: boolean = true;
 
   pageChangeLoading: boolean = false;
@@ -35,7 +35,7 @@ export class VideosComponent implements OnInit {
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
-    private videoService: VideoService,
+    private achievementsService: AchievementsService,
     private router: Router,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
@@ -67,22 +67,22 @@ export class VideosComponent implements OnInit {
   enlargeImage(image) {
     const dialogRef = this.dialog.open(ImgViewDialog, {
       width: "65rem",
-      height: "45rem",
+      height: "50rem",
       data: {
-        img: `https://indusre.com/images/videos/${image}`,
+        img: `https://indusre.com/images/achievements/${image}`,
       },
     });
   }
 
   ngOnInit() {
-    this.videoService
-      .getAllVideos(10, 1, "")
+    this.achievementsService
+      .getAllAchievements(10, 1, "")
       .subscribe((res) => {
-        this.videos = new MatTableDataSource(res.videos);
-        this.videosCount = res.count;
+        this.achievements = new MatTableDataSource(res.ach);
+        this.achievementsCount = res.count;
         setTimeout(() => {
-          if (this.videos != undefined) {
-            this.videos.sort = this.sort;
+          if (this.achievements != undefined) {
+            this.achievements.sort = this.sort;
           }
         });
       })
@@ -93,14 +93,14 @@ export class VideosComponent implements OnInit {
 
   reloadPage() {
     this.isLoading = true;
-    this.videoService
-      .getAllVideos(10, 1, "")
+    this.achievementsService
+      .getAllAchievements(10, 1, "")
       .subscribe((res) => {
-        this.videos = new MatTableDataSource(res.videos);
-        this.videosCount = res.count;
+        this.achievements = new MatTableDataSource(res.ach);
+        this.achievementsCount = res.count;
         setTimeout(() => {
-          if (this.videos != undefined) {
-            this.videos.sort = this.sort;
+          if (this.achievements != undefined) {
+            this.achievements.sort = this.sort;
           }
         });
       })
@@ -118,26 +118,37 @@ export class VideosComponent implements OnInit {
     });
   }
 
-  editVideo(video: any) {
-    const dialogRef = this.dialog.open(EditVideoDialog, {
+  editAchievement(ach: any) {
+    const dialogRef = this.dialog.open(EditAchievementDialog, {
       width: "43rem",
-      height: "45rem",
+      height: "50rem",
       data: {
-        id: video.video_id,
-        title: video.video_title,
-        link: video.video_link,
-        img: `https://indusre.com/images/videos/${video.video_image}`,
+        name: ach.name,
+        award_by: ach.award_by,
+        date: ach.date,
+        img: `https://indusre.com/images/achievements/${ach.img}`,
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result != undefined) {
+        const d = new Date(result.date);
+        // This will return an ISO string matching your local time.
+        const updated_date = new Date(
+          d.getFullYear(),
+          d.getMonth(),
+          d.getDate(),
+          d.getHours(),
+          d.getMinutes() - d.getTimezoneOffset()
+        ).toISOString();
+
         const data = {
-          title: result.title,
-          link: result.link,
+          name: result.name,
+          award_by: result.award_by,
+          date: updated_date,
         };
-        this.videoService
-          .updateVideo(video.video_id, data)
+        this.achievementsService
+          .updateAchievement(ach.id, data)
           .subscribe((data) => {})
           .add(() => {
             if (!result.img_changed) {
@@ -149,17 +160,17 @@ export class VideosComponent implements OnInit {
           this.uploading = true;
           const formdata: FormData = new FormData();
           formdata.append("img", result.file);
-          formdata.append("img_name", video.video_image);
+          formdata.append("img_name", ach.img);
           formdata.append("type", "old");
 
-          this.videoService
-            .updateVideoImg(formdata)
+          this.achievementsService
+            .updateAchievementImg(formdata)
             .pipe(
               map((event) => this.getEventMessage(event)),
               tap((message) => {
                 if (message == "File is 100% uploaded.") {
                   this.uploading = false;
-                  this.openSnackBar("Image successfully updated!");
+                  this.openSnackBar("Achievement successfully updated!");
                   this.reloadPage();
                 }
               }),
@@ -170,10 +181,10 @@ export class VideosComponent implements OnInit {
       }
     });
   }
-  addNewVideo() {
-    const dialogRef = this.dialog.open(AddNewVideoDialog, {
+  addNewAchievement() {
+    const dialogRef = this.dialog.open(AddNewAchievementDialog, {
       width: "43rem",
-      height: "45rem",
+      height: "50rem",
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -181,30 +192,42 @@ export class VideosComponent implements OnInit {
         this.uploading = true;
         const random_id = uuid.v4();
         const formdata: FormData = new FormData();
+
+        const d = new Date(result.date);
+        // This will return an ISO string matching your local time.
+        const updated_date = new Date(
+          d.getFullYear(),
+          d.getMonth(),
+          d.getDate(),
+          d.getHours(),
+          d.getMinutes() - d.getTimezoneOffset()
+        ).toISOString();
+
         const data = {
           img: `${random_id}.${
             result.file.name.split(".")[result.file.name.split(".").length - 1]
           }`,
-          title: result.title,
-          link: result.link,
+          name: result.name,
+          award_by: result.award_by,
+          date: updated_date,
         };
 
         formdata.append("img", result.file);
         formdata.append("img_name", `${random_id}`);
         formdata.append("type", "new");
 
-        this.videoService.addNewVideo(data).subscribe((data) => {
+        this.achievementsService.addNewAchievement(data).subscribe((data) => {
           console.log(data);
         });
 
-        this.videoService
-          .updateVideoImg(formdata)
+        this.achievementsService
+          .updateAchievementImg(formdata)
           .pipe(
             map((event) => this.getEventMessage(event)),
             tap((message) => {
               if (message == "File is 100% uploaded.") {
                 this.uploading = false;
-                this.openSnackBar("Image successfully updated!");
+                this.openSnackBar("New Achievement successfully added!");
                 this.reloadPage();
               }
             }),
@@ -215,21 +238,21 @@ export class VideosComponent implements OnInit {
     });
   }
 
-  delete(video) {
+  delete(ach) {
     const dialogRef = this.dialog.open(CautionDialog, {
       width: "40rem",
       height: "17rem",
       data: {
-        id: video.video_id,
-        title: video.video_title,
-        type: "video",
+        id: ach.id,
+        title: ach.name,
+        type: "ach",
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result != undefined && result.delete == true) {
-        this.videoService
-          .deleteVideo(video.video_id, video.video_image)
+        this.achievementsService
+          .deleteAchievement(ach.id, ach.img)
           .subscribe((res) => {
             this.openSnackBar("Video deleted successfully");
             this.reloadPage();
@@ -240,10 +263,10 @@ export class VideosComponent implements OnInit {
 
   pageChange(event) {
     this.pageChangeLoading = true;
-    this.videoService
-      .getAllVideos(event.pageSize, event.pageIndex + 1, "")
+    this.achievementsService
+      .getAllAchievements(event.pageSize, event.pageIndex + 1, "")
       .subscribe((res) => {
-        this.videos = new MatTableDataSource(res.videos);
+        this.achievements = new MatTableDataSource(res.ach);
       })
       .add(() => {
         this.pageChangeLoading = false;

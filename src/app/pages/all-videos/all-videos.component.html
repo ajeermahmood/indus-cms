@@ -89,6 +89,7 @@
                   style="max-width: 13rem !important"
                 >
                   <img
+                    (click)="enlargeImage(item.video_image)"
                     *ngIf="!pageChangeLoading"
                     src="{{
                       'https://indusre.com/images/videos/' + item.video_image

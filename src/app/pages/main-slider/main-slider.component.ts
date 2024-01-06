@@ -7,6 +7,7 @@ import { Router } from "@angular/router";
 import { AddNewSliderImgDialog } from "app/components/add-new-slider-img-dialog/add-new-slider-img-dialog.component";
 import { CautionDialog } from "app/components/caution-dialog/caution-dialog.component";
 import { EditSliderImgDialog } from "app/components/edit-slider-img-dialog/edit-slider-img-dialog.component";
+import { ImgViewDialog } from "app/components/img-view-dialog/img-view-dialog.component";
 import { AuthService } from "app/services/auth.service";
 import { MainSliderService } from "app/services/main-slider.service";
 import { last, map, tap } from "rxjs";
@@ -47,6 +48,16 @@ export class MainSliderComponent implements OnInit {
       .add(() => {
         this.isLoading = false;
       });
+  }
+
+  enlargeImage(image) {
+    const dialogRef = this.dialog.open(ImgViewDialog, {
+      width: "70rem",
+      height: "35rem",
+      data: {
+        img: `https://indusre.com/main_slider/${image}`,
+      },
+    });
   }
 
   revertOrder() {

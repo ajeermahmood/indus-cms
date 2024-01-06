@@ -89,6 +89,8 @@
                   <td cdkDragHandle>{{ data.name }}</td>
                   <td>
                     <img
+                      style="cursor: pointer"
+                      (click)="enlargeImage(data.img)"
                       src="{{ 'https://indusre.com/main_slider/' + data.img }}"
                       alt="img"
                       width="250"

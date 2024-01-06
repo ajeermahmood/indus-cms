@@ -39,17 +39,16 @@
                 >
                   ID
                 </th>
-                <td
-                  mat-cell
-                  *matCellDef="let item"
-                  (click)="navigateToEditDevPage(item)"
-                >
+                <td mat-cell *matCellDef="let item">
                   <div
                     *ngIf="!pageChangeLoading"
                     class="d-flex align-items-center justify-content-between maxw-7rem my-2"
                   >
-                    <span>{{ item.client_user_id }}</span>
+                    <span (click)="navigateToEditDevPage(item)">{{
+                      item.id
+                    }}</span>
                     <img
+                      (click)="enlargeImage(item.logo)"
                       class="member-avatar"
                       src="{{
                         'https://indusre.com/images/builders/logo/' + item.logo
@@ -101,10 +100,8 @@
                   mat-cell
                   *matCellDef="let item"
                   (click)="navigateToEditDevPage(item)"
-                  style="max-width: 13rem !important;"
+                  style="max-width: 13rem !important"
                 >
-                  
-
                   <span *ngIf="!pageChangeLoading"
                     ><b>{{ item.short_description }}</b></span
                   >

@@ -17,6 +17,11 @@ import { AddNewAdBannerDialog } from "./add-new-ad-banner-dialog/add-new-ad-bann
 import { EditAdBannerDialog } from "./edit-ad-banner-dialog/edit-ad-banner-dialog.component";
 import { AddNewVideoDialog } from "./add-new-video-dialog/add-new-video-dialog.component";
 import { EditVideoDialog } from "./edit-video-dialog/edit-video-dialog.component";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatNativeDateModule } from "@angular/material/core";
+import { AddNewAchievementDialog } from "./add-new-achievement-dialog/add-new-achievement-dialog.component";
+import { EditAchievementDialog } from "./edit-achievement-dialog/edit-achievement-dialog.component";
+import { ImgViewDialog } from "./img-view-dialog/img-view-dialog.component";
 
 @NgModule({
   imports: [
@@ -27,6 +32,8 @@ import { EditVideoDialog } from "./edit-video-dialog/edit-video-dialog.component
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   declarations: [
     FooterComponent,
@@ -40,6 +47,9 @@ import { EditVideoDialog } from "./edit-video-dialog/edit-video-dialog.component
     EditAdBannerDialog,
     AddNewVideoDialog,
     EditVideoDialog,
+    AddNewAchievementDialog,
+    EditAchievementDialog,
+    ImgViewDialog,
   ],
   exports: [
     FooterComponent,
@@ -53,6 +63,9 @@ import { EditVideoDialog } from "./edit-video-dialog/edit-video-dialog.component
     EditAdBannerDialog,
     AddNewVideoDialog,
     EditVideoDialog,
+    AddNewAchievementDialog,
+    EditAchievementDialog,
+    ImgViewDialog,
   ],
 })
 export class ComponentsModule {}

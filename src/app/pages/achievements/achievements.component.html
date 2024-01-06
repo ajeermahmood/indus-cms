@@ -1,18 +1,25 @@
 <div class="main-content">
+  <div class="progress-bar-wrapper" *ngIf="uploading">
+    <p class="mb-2 text-light">Uploading Image... {{ uploading_progress }}%</p>
+    <div class="progress-bar">
+      <div
+        class="progress-bar-fill"
+        [ngStyle]="{ 'width.%': uploading_progress % 100 }"
+      ></div>
+    </div>
+  </div>
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
         <div class="card">
           <div class="card-header bg-light-subtle row m-0">
             <div class="col d-flex align-items-center">
-              <h4 class="card-title text-light">Team</h4>
+              <h4 class="card-title text-light">All Achievements</h4>
             </div>
             <div class="col d-flex justify-content-end">
-              <div
-                class="btn btn-primary"
-                (click)="navigateToAddNewMemberPage()"
-              >
-                Add New Member
+              <div class="btn btn-primary" (click)="addNewAchievement()">
+                Add New Achievement
               </div>
             </div>
           </div>
@@ -27,7 +34,7 @@
             <table
               *ngIf="!isLoading"
               mat-table
-              [dataSource]="team"
+              [dataSource]="achievements"
               matSort
               (matSortChange)="announceSortChange($event)"
               class="mat-elevation-z8"
@@ -45,20 +52,18 @@
                 <td mat-cell *matCellDef="let item">
                   <div
                     *ngIf="!pageChangeLoading"
-                    class="d-flex align-items-center justify-content-between maxw-7rem my-2"
+                    class="d-flex align-items-center justify-content-between maxw-8rem my-2"
                   >
-                    <span (click)="navigateToEditMemberPage(item)">{{
-                      item.client_user_id
-                    }}</span>
+                    <span>{{ item.id }}</span>
                     <img
-                      (click)="enlargeImage(item.client_user_image)"
+                      (click)="enlargeImage(item.img)"
                       class="member-avatar"
                       src="{{
-                        'https://indusre.com/agentimg/' + item.client_user_image
+                        'https://indusre.com/images/achievements/' + item.img
                       }}"
                       alt="img"
-                      width="55"
-                      height="55"
+                      width="80"
+                      height="80"
                       onerror="this.src='assets/img/svg/team.svg';"
                     />
                   </div>
@@ -78,17 +83,13 @@
               <!-- Name Column -->
               <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef>Name</th>
-                <td
-                  mat-cell
-                  *matCellDef="let item"
-                  (click)="navigateToEditMemberPage(item)"
-                >
+                <td mat-cell *matCellDef="let item">
                   <span *ngIf="!pageChangeLoading"
-                    ><b>{{ item.client_user_name }}</b></span
+                    ><b>{{ item.name }}</b></span
                   >
                   <ngx-skeleton-loader
                     [theme]="{
-                      width: '300px',
+                      width: '200px',
                       height: '30px',
                       'margin-top': '5px',
                       'margin-bottom': '0px'
@@ -97,21 +98,15 @@
                   ></ngx-skeleton-loader>
                 </td>
               </ng-container>
-              <ng-container matColumnDef="email">
-                <th mat-header-cell *matHeaderCellDef>Email</th>
-                <td
-                  mat-cell
-                  *matCellDef="let item"
-                  (click)="navigateToEditMemberPage(item)"
-                >
-                  <span *ngIf="!pageChangeLoading">{{
-                    item.client_user_email != ""
-                      ? item.client_user_email
-                      : "N/A"
-                  }}</span>
+              <ng-container matColumnDef="award_by">
+                <th mat-header-cell *matHeaderCellDef>Award By</th>
+                <td mat-cell *matCellDef="let item">
+                  <span *ngIf="!pageChangeLoading"
+                    ><b>{{ item.award_by }}</b></span
+                  >
                   <ngx-skeleton-loader
                     [theme]="{
-                      width: '300px',
+                      width: '200px',
                       height: '30px',
                       'margin-top': '5px',
                       'margin-bottom': '0px'
@@ -121,21 +116,15 @@
                 </td>
               </ng-container>
 
-              <ng-container matColumnDef="dsgtn">
-                <th mat-header-cell *matHeaderCellDef>Designation</th>
-                <td
-                  mat-cell
-                  *matCellDef="let item"
-                  (click)="navigateToEditMemberPage(item)"
-                >
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Issued Date</th>
+                <td mat-cell *matCellDef="let item">
                   <span *ngIf="!pageChangeLoading">{{
-                    item.client_user_designation != ""
-                      ? item.client_user_designation
-                      : "N/A"
+                    item.date != "0000-00-00" ? item.date : "N/A"
                   }}</span>
                   <ngx-skeleton-loader
                     [theme]="{
-                      width: '300px',
+                      width: '100px',
                       height: '30px',
                       'margin-top': '5px',
                       'margin-bottom': '0px'
@@ -167,10 +156,7 @@
                   ></mat-icon>
 
                   <mat-menu #menu="matMenu">
-                    <button
-                      mat-menu-item
-                      (click)="navigateToEditMemberPage(item)"
-                    >
+                    <button mat-menu-item (click)="editAchievement(item)">
                       <mat-icon
                         class="sub-menu-icon-edit"
                         aria-hidden="false"
@@ -199,7 +185,7 @@
             <mat-paginator
               #paginator
               [pageSizeOptions]="[10, 14, 20]"
-              [length]="teamCount"
+              [length]="achievementsCount"
               showFirstLastButtons
               (page)="pageChange($event)"
             ></mat-paginator>

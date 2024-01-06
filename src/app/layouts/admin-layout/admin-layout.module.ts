@@ -40,6 +40,7 @@ import { DevelopersComponent } from "app/pages/developers/developers.component";
 import { AddNewDeveloperComponent } from "app/pages/add-new-developer/add-new-developer.component";
 import { EditDeveloperComponent } from "app/pages/edit-developer/edit-developer.component";
 import { VideosComponent } from "app/pages/all-videos/all-videos.component";
+import { AchievementsComponent } from "app/pages/achievements/achievements.component";
 
 @NgModule({
   imports: [
@@ -86,6 +87,7 @@ import { VideosComponent } from "app/pages/all-videos/all-videos.component";
     AddNewDeveloperComponent,
     EditDeveloperComponent,
     VideosComponent,
+    AchievementsComponent,
   ],
 })
 export class AdminLayoutModule {}

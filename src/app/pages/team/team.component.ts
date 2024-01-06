@@ -7,6 +7,7 @@ import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
 import { Router } from "@angular/router";
 import { CautionDialog } from "app/components/caution-dialog/caution-dialog.component";
+import { ImgViewDialog } from "app/components/img-view-dialog/img-view-dialog.component";
 import { AuthService } from "app/services/auth.service";
 import { TeamService } from "app/services/team.service";
 
@@ -52,6 +53,16 @@ export class TeamComponent implements OnInit {
     } else {
       this._liveAnnouncer.announce("Sorting cleared");
     }
+  }
+
+  enlargeImage(image) {
+    const dialogRef = this.dialog.open(ImgViewDialog, {
+      width: "65rem",
+      height: "50rem",
+      data: {
+        img: `https://indusre.com/agentimg/${image}`,
+      },
+    });
   }
 
   ngOnInit() {

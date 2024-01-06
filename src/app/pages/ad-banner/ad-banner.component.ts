@@ -7,6 +7,7 @@ import { Router } from "@angular/router";
 import { AddNewAdBannerDialog } from "app/components/add-new-ad-banner-dialog/add-new-ad-banner-dialog.component";
 import { CautionDialog } from "app/components/caution-dialog/caution-dialog.component";
 import { EditAdBannerDialog } from "app/components/edit-ad-banner-dialog/edit-ad-banner-dialog.component";
+import { ImgViewDialog } from "app/components/img-view-dialog/img-view-dialog.component";
 import { AdBannerService } from "app/services/ad-banner.service";
 import { AuthService } from "app/services/auth.service";
 import { last, map, tap } from "rxjs";
@@ -47,6 +48,16 @@ export class AdBannerComponent implements OnInit {
       .add(() => {
         this.isLoading = false;
       });
+  }
+
+  enlargeImage(image) {
+    const dialogRef = this.dialog.open(ImgViewDialog, {
+      width: "70rem",
+      height: "55rem",
+      data: {
+        img: image,
+      },
+    });
   }
 
   revertOrder() {

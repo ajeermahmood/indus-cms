@@ -46,6 +46,8 @@ export class CautionDialog implements OnInit {
         return "Developer";
       case "video":
         return "Video";
+      case "ach":
+        return "Achievement";
       default:
         return "";
     }
