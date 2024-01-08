@@ -48,11 +48,7 @@ export class EditAchievementDialog implements OnInit {
   }
 
   submit() {
-    if (
-      this.name != "" &&
-      this.award_by != "" &&
-      this.date != "" 
-    ) {
+    if (this.name != "" && this.award_by != "" && this.date != "") {
       this.dialogRef.close({
         img: this.image,
         file: this.image_file,

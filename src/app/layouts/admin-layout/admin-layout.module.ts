@@ -41,6 +41,8 @@ import { AddNewDeveloperComponent } from "app/pages/add-new-developer/add-new-de
 import { EditDeveloperComponent } from "app/pages/edit-developer/edit-developer.component";
 import { VideosComponent } from "app/pages/all-videos/all-videos.component";
 import { AchievementsComponent } from "app/pages/achievements/achievements.component";
+import { CommunityGuidesComponent } from "app/pages/community-guides/community-guides.component";
+import { AddNewGuideComponent } from "app/pages/add-new-guide/add-new-guide.component";
 
 @NgModule({
   imports: [
@@ -88,6 +90,8 @@ import { AchievementsComponent } from "app/pages/achievements/achievements.compo
     EditDeveloperComponent,
     VideosComponent,
     AchievementsComponent,
+    CommunityGuidesComponent,
+    AddNewGuideComponent,
   ],
 })
 export class AdminLayoutModule {}

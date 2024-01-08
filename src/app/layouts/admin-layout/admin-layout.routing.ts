@@ -19,6 +19,8 @@ import { AddNewDeveloperComponent } from "app/pages/add-new-developer/add-new-de
 import { EditDeveloperComponent } from "app/pages/edit-developer/edit-developer.component";
 import { VideosComponent } from "app/pages/all-videos/all-videos.component";
 import { AchievementsComponent } from "app/pages/achievements/achievements.component";
+import { CommunityGuidesComponent } from "app/pages/community-guides/community-guides.component";
+import { AddNewGuideComponent } from "app/pages/add-new-guide/add-new-guide.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "login", component: LoginComponent },
@@ -40,4 +42,6 @@ export const AdminLayoutRoutes: Routes = [
   { path: "edit-developer", component: EditDeveloperComponent },
   { path: "videos", component: VideosComponent },
   { path: "achievements", component: AchievementsComponent },
+  { path: "community-guides", component: CommunityGuidesComponent },
+  { path: "add-new-guide", component: AddNewGuideComponent },
 ];
