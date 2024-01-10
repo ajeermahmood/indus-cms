@@ -109,36 +109,36 @@ export class CommunityGuidesComponent implements OnInit {
     });
   }
 
-  navigateToEditDevPage(dev: any) {
-    // this.router.navigate(["/edit-developer"], {
-    //   queryParams: { id: dev.id },
-    // });
+  navigateToEditDevPage(g: any) {
+    this.router.navigate(["/edit-guide"], {
+      queryParams: { id: g.ps_guide_id },
+    });
   }
   navigateToAddNewDevPage() {
     this.router.navigate(["/add-new-guide"]);
   }
 
-  delete(dev) {
+  delete(guide) {
     const dialogRef = this.dialog.open(CautionDialog, {
       width: "40rem",
       height: "17rem",
       data: {
-        id: dev.id,
-        title: dev.name,
-        type: "dev",
+        title: guide.location_name,
+        type: "guide",
       },
     });
 
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   if (result != undefined && result.delete == true) {
-    //     this.guideservice
-    //       .deleteDeveloper(dev.id, dev.logo, dev.main_image, dev.about_image)
-    //       .subscribe((res) => {
-    //         this.openSnackBar("Developer deleted successfully");
-    //         this.reloadPage();
-    //       });
-    //   }
-    // });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result != undefined && result.delete == true) {
+        this.guidesService
+          .deleteGuide(guide.ps_guide_id, guide.location_image)
+          .subscribe((res) => {})
+          .add(() => {
+            this.openSnackBar("Community guide deleted successfully");
+            this.reloadPage();
+          });
+      }
+    });
   }
 
   pageChange(event) {

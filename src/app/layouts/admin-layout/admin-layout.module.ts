@@ -43,6 +43,7 @@ import { VideosComponent } from "app/pages/all-videos/all-videos.component";
 import { AchievementsComponent } from "app/pages/achievements/achievements.component";
 import { CommunityGuidesComponent } from "app/pages/community-guides/community-guides.component";
 import { AddNewGuideComponent } from "app/pages/add-new-guide/add-new-guide.component";
+import { EditGuideComponent } from "app/pages/edit-guide/edit-guide.component";
 
 @NgModule({
   imports: [
@@ -92,6 +93,7 @@ import { AddNewGuideComponent } from "app/pages/add-new-guide/add-new-guide.comp
     AchievementsComponent,
     CommunityGuidesComponent,
     AddNewGuideComponent,
+    EditGuideComponent,
   ],
 })
 export class AdminLayoutModule {}

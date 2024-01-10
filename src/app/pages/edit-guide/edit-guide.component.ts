@@ -2,7 +2,7 @@ import { HttpEvent, HttpEventType } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { AddImgDialog } from "app/components/add-img-dialog/add-img-dialog.component";
 import { AddNewGuideHighlightDialog } from "app/components/add-new-guide-highlight-dialog/add-new-guide-highlight-dialog.component";
 import { AuthService } from "app/services/auth.service";
@@ -13,20 +13,26 @@ import { last, map, tap } from "rxjs";
 import * as uuid from "uuid";
 
 @Component({
-  selector: "app-add-new-guide",
-  templateUrl: "./add-new-guide.component.html",
-  styleUrls: ["./add-new-guide.component.scss"],
+  selector: "app-edit-guide",
+  templateUrl: "./edit-guide.component.html",
+  styleUrls: ["./edit-guide.component.scss"],
 })
-export class AddNewGuideComponent implements OnInit {
+export class EditGuideComponent implements OnInit {
   uploading_progress: any = 0;
   uploading: boolean = false;
   saving: boolean = false;
+  isLoading: boolean = true;
 
   main_img: any = "assets/img/add-image.png";
   main_img_file: File;
 
+  main_img_changed: boolean = false;
+
   gallary_imgs_files: File[] = [];
   gallary_imgs: any[] = [];
+
+  gallary_imgs_new: any[] = [];
+  gallary_imgs_deleted: any[] = [];
 
   locations: any[] = [];
 
@@ -38,15 +44,25 @@ export class AddNewGuideComponent implements OnInit {
   tinyMceConfig: any;
 
   highlights: any[] = [];
+  highlights_new: any[] = [];
+  highlights_deleted: any[] = [];
 
   ext_url: any = "";
+
+  guide_id: any;
+
+  old_gallary_imgs: any[] = [];
+  old_highlights: any[] = [];
+
+  allData: any;
 
   constructor(
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private guidesService: CommunityGuidesService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     if (!this.authService.currentUserValue) {
       this.router.navigate(["/login"]);
@@ -99,6 +115,43 @@ export class AddNewGuideComponent implements OnInit {
       menubar: "file edit view insert format tools table help",
       link_default_target: "_blank",
     };
+
+    this.route.queryParams.subscribe((res) => {
+      this.guide_id = res.id;
+      guidesService
+        .getGuideDetails(res.id)
+        .subscribe((g) => {
+          console.log(g);
+          this.allData = g;
+          this.selected_location = g.location_id;
+          this.short_desc = g.location_blurb;
+          this.long_desc = g.location_description;
+          this.ext_url = g.more_details_url;
+          this.main_img = `https://indusre.com/communityimg/${g.location_image}`;
+
+          if (g.gallary.length != 0) {
+            this.old_gallary_imgs = g.gallary;
+            g.gallary.forEach((img) => {
+              this.gallary_imgs.push(
+                `https://indusre.com/communityimg/${img.ps_gallery_image}`
+              );
+            });
+          }
+          if (g.highlights.length != 0) {
+            this.old_highlights = g.highlights;
+            g.highlights.forEach((h) => {
+              this.highlights.push({
+                title: h.ps_highlight_title,
+                subtitle: h.ps_highlight_text,
+                img: `https://indusre.com/communityimg/${h.ps_highlight_image}`,
+              });
+            });
+          }
+        })
+        .add(() => {
+          this.isLoading = false;
+        });
+    });
   }
 
   ngOnInit() {}
@@ -115,12 +168,40 @@ export class AddNewGuideComponent implements OnInit {
   }
 
   removeAllGallaryimgs() {
+    this.gallary_imgs.forEach((img) => {
+      if (
+        this.old_gallary_imgs.includes(
+          this.old_gallary_imgs.find(
+            (ol) =>
+              ol.ps_gallery_image == new String(img).split("communityimg/")[1]
+          )
+        )
+      ) {
+        this.gallary_imgs_deleted.push(
+          new String(img).split("communityimg/")[1]
+        );
+      }
+    });
+
     this.gallary_imgs.length = 0;
     this.gallary_imgs_files.length = 0;
   }
 
   removeGallaryImg(index: any) {
-    this.gallary_imgs_files.splice(index, 1);
+    if (
+      this.old_gallary_imgs.includes(
+        this.old_gallary_imgs.find(
+          (ol) =>
+            ol.ps_gallery_image ==
+            new String(this.gallary_imgs[index]).split("communityimg/")[1]
+        )
+      )
+    ) {
+      this.gallary_imgs_deleted.push(this.old_gallary_imgs[index]);
+    } else {
+      this.gallary_imgs_files.splice(index, 1);
+    }
+
     this.gallary_imgs.splice(index, 1);
   }
 
@@ -134,6 +215,7 @@ export class AddNewGuideComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       this.main_img = result.img;
       this.main_img_file = result.file;
+      this.main_img_changed = true;
     });
   }
 
@@ -156,11 +238,24 @@ export class AddNewGuideComponent implements OnInit {
       if (result != undefined) {
         console.log(result);
         this.highlights.push(result);
+        this.highlights_new.push(result);
       }
     });
   }
 
   removeHighLight(index: any) {
+    if (
+      this.old_highlights.includes(
+        this.old_highlights.find(
+          (ol) =>
+            ol.ps_highlight_image ==
+            new String(this.highlights[index].img).split("communityimg/")[1]
+        )
+      )
+    ) {
+      this.highlights_deleted.push(this.old_highlights[index]);
+    }
+
     this.highlights.splice(index, 1);
   }
 
@@ -169,7 +264,6 @@ export class AddNewGuideComponent implements OnInit {
       this.selected_location != "" &&
       this.short_desc != "" &&
       this.long_desc != "" &&
-      this.main_img != "assets/img/add-image.png" &&
       this.gallary_imgs.length != 0 &&
       this.highlights.length != 0
     ) {
@@ -178,32 +272,34 @@ export class AddNewGuideComponent implements OnInit {
       this.saving = true;
       this.uploading = true;
 
-      const gallary_imgs = this.gallary_imgs_files.map(
-        (f, i) =>
-          `${random_id}_g_${i}.${
-            f.name.split(".")[f.name.split(".").length - 1]
-          }`
-      );
+      let gallary_imgs = [];
+      if (this.gallary_imgs_files.length != 0) {
+        gallary_imgs = this.gallary_imgs_files.map(
+          (f, i) =>
+            `${random_id}_g_${i}.${
+              f.name.split(".")[f.name.split(".").length - 1]
+            }`
+        );
+      }
 
-      const highlights_imgs = this.highlights.map(
-        (h, i) =>
-          `${random_id}_h_${i}.${
-            h.file.name.split(".")[h.file.name.split(".").length - 1]
-          }`
-      );
+      let highlights_imgs = [];
+      if (this.highlights_new.length != 0) {
+        highlights_imgs = this.highlights_new.map(
+          (h, i) =>
+            `${random_id}_h_${i}.${
+              h.file.name.split(".")[h.file.name.split(".").length - 1]
+            }`
+        );
+      }
+
       const data = {
         l_id: this.selected_location,
         short_desc: this.short_desc,
         long_desc: this.long_desc,
         ext_url: this.ext_url,
-        main_img: `${random_id}_main.${
-          this.main_img_file.name.split(".")[
-            this.main_img_file.name.split(".").length - 1
-          ]
-        }`,
         gallary_imgs: gallary_imgs,
 
-        highlights: this.highlights.map((h, i) => {
+        highlights: this.highlights_new.map((h, i) => {
           return {
             title: h.title,
             subtitle: h.subtitle,
@@ -212,27 +308,52 @@ export class AddNewGuideComponent implements OnInit {
             }`,
           };
         }),
+
+        deleted_gallary: this.gallary_imgs_deleted
+          .map((g) => g.ps_gallery_id)
+          .join(","),
+        deleted_highlights: this.highlights_deleted
+          .map((h) => h.ps_highlight_id)
+          .join(","),
       };
 
-      this.guidesService.addNewGuide(data).subscribe((res) => {
+      this.guidesService.updateGuide(this.guide_id, data).subscribe((res) => {
         console.log(res);
       });
 
-      formdata.append("main_img", this.main_img_file);
-      formdata.append("main_img_name", `${random_id}_main`);
+      let all_deleted_imgs = this.gallary_imgs_deleted.map(
+        (g) => g.ps_gallery_image
+      );
 
-      formdata.append("g_img_names", JSON.stringify(gallary_imgs));
-      formdata.append("h_img_names", JSON.stringify(highlights_imgs));
+      all_deleted_imgs.push(
+        ...this.highlights_deleted.map((h) => h.ps_highlight_image)
+      );
 
-      this.gallary_imgs_files.forEach((f, i) => {
-        formdata.append(`g_img_${i}`, f);
-      });
+      if (this.main_img_changed) {
+        formdata.append("main_img", this.main_img_file);
+        formdata.append("main_img_name", this.allData.location_image);
+      }
 
-      this.highlights.forEach((h, i) => {
-        formdata.append(`h_img_${i}`, h.file);
-      });
+      if (all_deleted_imgs.length > 0) {
+        console.log(all_deleted_imgs);
+        formdata.append("deleted_imgs", JSON.stringify(all_deleted_imgs));
+      }
 
-      formdata.append("type", "new");
+      if (gallary_imgs.length > 0) {
+        formdata.append("g_img_names", JSON.stringify(gallary_imgs));
+        this.gallary_imgs_files.forEach((f, i) => {
+          formdata.append(`g_img_${i}`, f);
+        });
+      }
+
+      if (highlights_imgs.length > 0) {
+        formdata.append("h_img_names", JSON.stringify(highlights_imgs));
+        this.highlights_new.forEach((h, i) => {
+          formdata.append(`h_img_${i}`, h.file);
+        });
+      }
+
+      formdata.append("type", "old");
 
       this.guidesService
         .updateGuideImg(formdata)
@@ -240,11 +361,9 @@ export class AddNewGuideComponent implements OnInit {
           map((event) => this.getEventMessage(event)),
           tap((message) => {
             if (message == "File is 100% uploaded.") {
+              this.openSnackBar("Community guide successfully updated!");
               this.uploading = false;
-              this.openSnackBar("Community guide successfully added!");
-              setTimeout(() => {
-                this.router.navigate(["/community-guides"]);
-              }, 500);
+              this.saving = false;
             }
           }),
           last()

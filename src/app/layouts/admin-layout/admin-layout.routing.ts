@@ -21,6 +21,7 @@ import { VideosComponent } from "app/pages/all-videos/all-videos.component";
 import { AchievementsComponent } from "app/pages/achievements/achievements.component";
 import { CommunityGuidesComponent } from "app/pages/community-guides/community-guides.component";
 import { AddNewGuideComponent } from "app/pages/add-new-guide/add-new-guide.component";
+import { EditGuideComponent } from "app/pages/edit-guide/edit-guide.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "login", component: LoginComponent },
@@ -44,4 +45,5 @@ export const AdminLayoutRoutes: Routes = [
   { path: "achievements", component: AchievementsComponent },
   { path: "community-guides", component: CommunityGuidesComponent },
   { path: "add-new-guide", component: AddNewGuideComponent },
+  { path: "edit-guide", component: EditGuideComponent },
 ];

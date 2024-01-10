@@ -22,6 +22,7 @@ import { MatNativeDateModule } from "@angular/material/core";
 import { AddNewAchievementDialog } from "./add-new-achievement-dialog/add-new-achievement-dialog.component";
 import { EditAchievementDialog } from "./edit-achievement-dialog/edit-achievement-dialog.component";
 import { ImgViewDialog } from "./img-view-dialog/img-view-dialog.component";
+import { AddNewGuideHighlightDialog } from "./add-new-guide-highlight-dialog/add-new-guide-highlight-dialog.component";
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { ImgViewDialog } from "./img-view-dialog/img-view-dialog.component";
     AddNewAchievementDialog,
     EditAchievementDialog,
     ImgViewDialog,
+    AddNewGuideHighlightDialog,
   ],
   exports: [
     FooterComponent,
@@ -66,6 +68,7 @@ import { ImgViewDialog } from "./img-view-dialog/img-view-dialog.component";
     AddNewAchievementDialog,
     EditAchievementDialog,
     ImgViewDialog,
+    AddNewGuideHighlightDialog,
   ],
 })
 export class ComponentsModule {}

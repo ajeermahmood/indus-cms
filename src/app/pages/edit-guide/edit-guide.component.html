@@ -12,14 +12,14 @@
   <!-- Progress Bar -->
   <div class="container-fluid">
     <div
-      *ngIf="saving"
+      *ngIf="isLoading || saving"
       class="d-flex align-items-center justify-content-center w-100 h-30rem"
     >
       <mat-spinner [diameter]="50"></mat-spinner>
     </div>
-    <div class="col w-100" *ngIf="!saving">
+    <div class="col w-100" *ngIf="!isLoading && !saving">
       <div class="row m-0 justify-content-between align-items-center p20">
-        <h3>Add New Guide</h3>
+        <h3>Edit Guide</h3>
 
         <div class="row m-0">
           <div class="col">
