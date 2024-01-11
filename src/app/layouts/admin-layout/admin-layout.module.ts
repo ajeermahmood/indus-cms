@@ -44,6 +44,9 @@ import { AchievementsComponent } from "app/pages/achievements/achievements.compo
 import { CommunityGuidesComponent } from "app/pages/community-guides/community-guides.component";
 import { AddNewGuideComponent } from "app/pages/add-new-guide/add-new-guide.component";
 import { EditGuideComponent } from "app/pages/edit-guide/edit-guide.component";
+import { OptimizeImgComponent } from "app/pages/optimize-img/optimize-img.component";
+import { ImageCropperModule } from "ngx-image-cropper";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @NgModule({
   imports: [
@@ -70,6 +73,8 @@ import { EditGuideComponent } from "app/pages/edit-guide/edit-guide.component";
     DragDropModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    ImageCropperModule,
+    MatCheckboxModule,
   ],
   declarations: [
     LoginComponent,
@@ -94,6 +99,7 @@ import { EditGuideComponent } from "app/pages/edit-guide/edit-guide.component";
     CommunityGuidesComponent,
     AddNewGuideComponent,
     EditGuideComponent,
+    OptimizeImgComponent,
   ],
 })
 export class AdminLayoutModule {}

@@ -22,6 +22,7 @@ import { AchievementsComponent } from "app/pages/achievements/achievements.compo
 import { CommunityGuidesComponent } from "app/pages/community-guides/community-guides.component";
 import { AddNewGuideComponent } from "app/pages/add-new-guide/add-new-guide.component";
 import { EditGuideComponent } from "app/pages/edit-guide/edit-guide.component";
+import { OptimizeImgComponent } from "app/pages/optimize-img/optimize-img.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "login", component: LoginComponent },
@@ -46,4 +47,5 @@ export const AdminLayoutRoutes: Routes = [
   { path: "community-guides", component: CommunityGuidesComponent },
   { path: "add-new-guide", component: AddNewGuideComponent },
   { path: "edit-guide", component: EditGuideComponent },
+  { path: "optimize-img", component: OptimizeImgComponent },
 ];

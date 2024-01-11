@@ -1,0 +1,87 @@
+.browse-btn {
+  padding: 11px 20px;
+  color: grey;
+  background: white;
+  border: 1px solid #808080b5;
+
+  mat-icon {
+    margin-bottom: -20px;
+    margin-right: 5px;
+  }
+}
+
+.card {
+  border: 1px solid #80808042;
+  box-shadow: none;
+  .card-header {
+    border-bottom: 1px solid #80808042;
+    font-size: 20px;
+    padding: 15px 25px;
+    font-weight: 500;
+    background: #80808017;
+  }
+}
+
+.img-view {
+  max-width: 50%;
+  max-height: 8rem;
+  object-fit: contain;
+  object-position: center;
+}
+
+.crop-settings-title {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #797979;
+}
+
+.crop-sett-btns {
+  padding: 15px 15px;
+  margin-right: 10px;
+  color: grey;
+  background: white;
+  border: 1px solid #80808042;
+  mat-icon {
+    margin-bottom: -20px;
+    font-size: 25px;
+  }
+}
+
+.crop-sett-reset-btn {
+  padding: 15px 15px;
+  color: grey;
+  background: white;
+  border: 1px solid #80808042;
+  mat-icon {
+    margin-bottom: -20px;
+    font-size: 25px;
+    margin-right: 10px;
+  }
+}
+
+::ng-deep .tooltip {
+  position: relative;
+  //   background-color: transparent;
+  color: #313a46 !important;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 6px !important;
+  max-width: none !important;
+  min-width: auto !important;
+}
+
+.custom-loader {
+  position: absolute;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff66;
+}
