@@ -1,16 +1,15 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import { Component, HostListener, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { AuthService } from "app/services/auth.service";
-import { DashboardService } from "app/services/dashboard.service";
 import {
   Dimensions,
   ImageCroppedEvent,
   ImageTransform,
-  LoadedImage,
 } from "ngx-image-cropper";
-import { DomSanitizer } from "@angular/platform-browser";
 
-import * as sharp from "sharp";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { ImageOptimizeService } from "app/services/image-optimize.service";
+import { Observable, bindCallback, map, of, tap } from "rxjs";
 
 @Component({
   selector: "app-optimize-img",
@@ -20,6 +19,8 @@ import * as sharp from "sharp";
 export class OptimizeImgComponent implements OnInit {
   img: any;
   imgSelected: boolean = false;
+
+  selected_img_file: File;
 
   maintainAspectRatio: boolean = false;
 
@@ -40,7 +41,7 @@ export class OptimizeImgComponent implements OnInit {
   resize_height: number = 0;
   resize_scale: number = 100;
 
-  img_quality: number = 100;
+  img_quality: number = 80;
   img_format: any;
 
   img_file_name: any = "";
@@ -55,10 +56,10 @@ export class OptimizeImgComponent implements OnInit {
   cropper_ready: boolean = false;
 
   constructor(
-    private dashboardService: DashboardService,
+    private imgService: ImageOptimizeService,
     private authService: AuthService,
     private router: Router,
-    private sanitizer: DomSanitizer
+    private _snackBar: MatSnackBar
   ) {
     if (!this.authService.currentUserValue) {
       this.router.navigate(["/login"]);
@@ -77,7 +78,7 @@ export class OptimizeImgComponent implements OnInit {
     { value: "png", viewValue: "PNG - Portable Network Graphics" },
     { value: "jpg", viewValue: "JPG - JPEG Image" },
     { value: "webp", viewValue: "WEBP - WebP Image" },
-    { value: "heic", viewValue: "HEIC - High-Efficiency Image Container" },
+    { value: "avif", viewValue: "AVIF - AV1 Image File Format" },
     { value: "tiff", viewValue: "TIFF - Tagged Image File Format" },
   ];
 
@@ -89,6 +90,25 @@ export class OptimizeImgComponent implements OnInit {
       this.aspectRatio = event.value;
     }
   }
+
+  @HostListener("paste", ["$event"])
+  onPaste(e: ClipboardEvent) {
+    if (
+      e.clipboardData.files.length != 0 &&
+      e.clipboardData.files[0].type.startsWith("image")
+    ) {
+      this.selected_img_file = e.clipboardData.files[0];
+    }
+  }
+
+  ////////////////////////////////
+
+  onDropFile(event) {
+    if (event.addedFiles != undefined) {
+      this.selected_img_file = event.addedFiles[0];
+    }
+  }
+  ////////////////////////////////
 
   ngOnInit() {}
 
@@ -126,17 +146,63 @@ export class OptimizeImgComponent implements OnInit {
     }
   }
 
-  async download() {
-    console.log("download");
-    console.log(this.croppedImage);
+  openSnackBar(message: string) {
+    this._snackBar.open(message, "close", {
+      duration: 3000,
+      // panelClass: "my-custom-snackbar",
+      verticalPosition: "bottom",
+      horizontalPosition: "center",
+    });
+  }
 
-    // await sharp(this.croppedImage)
-    //   .resize(this.resize_width, this.resize_height)
-    //   .jpeg({ quality: this.img_quality })
-    //   .toBuffer()
-    //   .then((img) => {
-    //     console.log(img);
-    //   });
+  async download() {
+    if (this.imgSelected) {
+      if (this.img_format != undefined) {
+        this.cropper_ready = false;
+        const options = {
+          width: this.resize_width,
+          height: this.resize_height,
+          quality: this.img_quality,
+          format: this.img_format,
+        };
+
+        this.imgService.optimizeImage(this.croppedImage, options).subscribe(
+          (response: ArrayBuffer) => {
+            this.downloadImage(response);
+          },
+          (error) => {
+            console.error("Error optimizing image:", error);
+          }
+        );
+      } else {
+        this.openSnackBar("Please select image format!");
+      }
+    } else {
+      this.openSnackBar("Please upload image!");
+    }
+  }
+
+  downloadImage(buffer: ArrayBuffer) {
+    // Assume you have called optimizeImage and obtained the ArrayBuffer
+    const optimizedImageArrayBuffer: ArrayBuffer = buffer;
+
+    // Create a Blob from the ArrayBuffer
+    const blob = new Blob([optimizedImageArrayBuffer], {
+      type: "application/octet-stream",
+    });
+
+    // Create a download link
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = `${this.img_file_name}.${this.img_format}`;
+
+    // Append the link to the body and trigger the click event
+    document.body.appendChild(link);
+    link.click();
+
+    // Remove the link from the DOM
+    document.body.removeChild(link);
+    this.cropper_ready = true;
   }
 
   fileChangeEvent(event: any): void {
@@ -145,26 +211,24 @@ export class OptimizeImgComponent implements OnInit {
     this.imgSelected = true;
     this.resize_scale = 100;
 
-    this.img_file_name = event.target.files[0].name;
+    this.img_file_name = event.target.files[0].name.split(".")[0];
+
+    this.selected_img_file = event.target.files[0];
   }
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.blob;
     this.resize_width = event.imagePosition.x2 - event.imagePosition.x1;
     this.resize_height = event.imagePosition.y2 - event.imagePosition.y1;
   }
-  imageLoaded() {
+  imageLoaded(event) {
     this.showCropper = true;
+    this.img_og_width = event.transformed.size.width;
+    this.img_og_height = event.transformed.size.height;
   }
   cropperReady(sourceImageDimensions: Dimensions) {
     // cropper ready
     console.log("Cropper ready", sourceImageDimensions);
-
-    setTimeout(() => {
-      this.img_og_width = this.resize_width;
-      this.img_og_height = this.resize_height;
-
-      this.cropper_ready = true;
-    }, 1000);
+    this.cropper_ready = true;
   }
   loadImageFailed() {
     // show message
@@ -172,8 +236,7 @@ export class OptimizeImgComponent implements OnInit {
   }
 
   clear() {
-    this.croppedImage = "";
-    this.imageChangedEvent = "";
+    location.reload();
   }
 
   rotateLeft() {

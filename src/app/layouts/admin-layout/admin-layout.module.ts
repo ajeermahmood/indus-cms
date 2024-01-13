@@ -47,6 +47,7 @@ import { EditGuideComponent } from "app/pages/edit-guide/edit-guide.component";
 import { OptimizeImgComponent } from "app/pages/optimize-img/optimize-img.component";
 import { ImageCropperModule } from "ngx-image-cropper";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { NgxDropzoneModule } from "ngx-dropzone";
 
 @NgModule({
   imports: [
@@ -75,6 +76,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     MatNativeDateModule,
     ImageCropperModule,
     MatCheckboxModule,
+    NgxDropzoneModule,
   ],
   declarations: [
     LoginComponent,
