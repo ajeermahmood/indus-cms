@@ -54,6 +54,7 @@ export class OptimizeImgComponent implements OnInit {
   cropper: any = {};
 
   cropper_ready: boolean = false;
+  image_processing: boolean = false;
 
   constructor(
     private imgService: ImageOptimizeService,
@@ -98,6 +99,8 @@ export class OptimizeImgComponent implements OnInit {
       e.clipboardData.files[0].type.startsWith("image")
     ) {
       this.selected_img_file = e.clipboardData.files[0];
+      this.img_file_name = e.clipboardData.files[0].name.split(".")[0];
+      this.imgSelected = true;
     }
   }
 
@@ -106,6 +109,8 @@ export class OptimizeImgComponent implements OnInit {
   onDropFile(event) {
     if (event.addedFiles != undefined) {
       this.selected_img_file = event.addedFiles[0];
+      this.img_file_name = event.addedFiles[0].name.split(".")[0];
+      this.imgSelected = true;
     }
   }
   ////////////////////////////////
@@ -159,6 +164,7 @@ export class OptimizeImgComponent implements OnInit {
     if (this.imgSelected) {
       if (this.img_format != undefined) {
         this.cropper_ready = false;
+        this.image_processing = true;
         const options = {
           width: this.resize_width,
           height: this.resize_height,
@@ -203,17 +209,20 @@ export class OptimizeImgComponent implements OnInit {
     // Remove the link from the DOM
     document.body.removeChild(link);
     this.cropper_ready = true;
+    this.image_processing = false;
   }
 
   fileChangeEvent(event: any): void {
-    this.cropper_ready = false;
-    this.imageChangedEvent = event;
-    this.imgSelected = true;
-    this.resize_scale = 100;
+    if (event.target.files.length > 0) {
+      this.cropper_ready = false;
+      this.imageChangedEvent = event;
+      this.imgSelected = true;
+      this.resize_scale = 100;
 
-    this.img_file_name = event.target.files[0].name.split(".")[0];
+      this.img_file_name = event.target.files[0].name.split(".")[0];
 
-    this.selected_img_file = event.target.files[0];
+      this.selected_img_file = event.target.files[0];
+    }
   }
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.blob;

@@ -1,4 +1,8 @@
 <div class="main-content">
+  <div class="progress-bar-wrapper row m-0 justify-content-between" *ngIf="image_processing">
+    <span class="mb-2 text-light">Please wait. Image Processing...</span>
+    <mat-spinner [diameter]="30"></mat-spinner>
+  </div>
   <ngx-dropzone
     (change)="onDropFile($event)"
     class="dropzone"
