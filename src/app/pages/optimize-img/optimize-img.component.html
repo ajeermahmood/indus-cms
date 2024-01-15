@@ -84,7 +84,10 @@
               <h3 class="crop-settings-title">Aspect Ratio</h3>
               <mat-form-field appearance="outline">
                 <mat-label>Aspect Ratio</mat-label>
-                <mat-select (selectionChange)="aspectRatioChange($event)">
+                <mat-select
+                  (selectionChange)="aspectRatioChange($event)"
+                  [(ngModel)]="aspectRatio"
+                >
                   <mat-option
                     *ngFor="let asp of aspectRatios"
                     [value]="asp.value"
@@ -184,6 +187,50 @@
                   <mat-icon>settings_backup_restore</mat-icon>Reset
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div class="row m-0 mt-3">
+            <div class="col-6">
+              <h3 class="crop-settings-title">Crop by Coordinates</h3>
+              <mat-form-field appearance="outline">
+                <mat-label>Left</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="cropper.x1"
+                  type="number"
+                  (click)="cropByCordinates()"
+                />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Top</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="cropper.y1"
+                  type="number"
+                  (click)="cropByCordinates()"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-6" style="padding-top: 30px">
+              <mat-form-field appearance="outline">
+                <mat-label>Right</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="cropper.x2"
+                  type="number"
+                  (click)="cropByCordinates()"
+                />
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Bottom</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="cropper.y2"
+                  type="number"
+                  (click)="cropByCordinates()"
+                />
+              </mat-form-field>
             </div>
           </div>
 

@@ -27,7 +27,7 @@ export class OptimizeImgComponent implements OnInit {
 
   lockAspectRatio: boolean = true;
 
-  aspectRatio: any = 4 / 3;
+  aspectRatio: any;
 
   imageChangedEvent: any = "";
   croppedImage: any = "";
@@ -60,6 +60,9 @@ export class OptimizeImgComponent implements OnInit {
   uploading: boolean = false;
   image_processing: boolean = false;
   downloading: boolean = false;
+
+  current_cropped_width: number = 0;
+  current_cropped_height: number = 0;
 
   constructor(
     private imgService: ImageOptimizeService,
@@ -126,10 +129,13 @@ export class OptimizeImgComponent implements OnInit {
 
   resizeImage() {
     this.resize_width = Math.round(
-      this.img_og_width * (this.resize_scale / 100)
+      this.current_cropped_width * (this.resize_scale / 100)
     );
     this.resize_height = Math.round(
-      Math.min((this.resize_width * this.img_og_height) / this.img_og_width)
+      Math.min(
+        (this.resize_width * this.current_cropped_height) /
+          this.current_cropped_width
+      )
     );
   }
 
@@ -137,23 +143,31 @@ export class OptimizeImgComponent implements OnInit {
     if (this.lockAspectRatio) {
       if (type == "w") {
         this.resize_height = Math.round(
-          Math.min((this.resize_width * this.img_og_height) / this.img_og_width)
+          Math.min(
+            (this.resize_width * this.current_cropped_height) /
+              this.current_cropped_width
+          )
         );
 
-        var perc = (100 * this.resize_width) / this.img_og_width;
+        var perc = (100 * this.resize_width) / this.current_cropped_width;
         this.resize_scale = Number(perc.toFixed(2));
       } else if (type == "h") {
         this.resize_width = Math.round(
           Math.min(
-            (this.resize_height * this.img_og_width) / this.img_og_height
+            (this.resize_height * this.current_cropped_width) /
+              this.current_cropped_height
           )
         );
 
-        var perc = (100 * this.resize_width) / this.img_og_width;
+        var perc = (100 * this.resize_width) / this.current_cropped_width;
         this.resize_scale = Number(perc.toFixed(2));
       }
     } else {
     }
+  }
+
+  cropByCordinates() {
+    this.transform = { ...this.transform };
   }
 
   openSnackBar(message: string) {
@@ -294,6 +308,13 @@ export class OptimizeImgComponent implements OnInit {
     this.croppedImage = event.blob;
     this.resize_width = event.imagePosition.x2 - event.imagePosition.x1;
     this.resize_height = event.imagePosition.y2 - event.imagePosition.y1;
+
+    this.current_cropped_width =
+      event.imagePosition.x2 - event.imagePosition.x1;
+    this.current_cropped_height =
+      event.imagePosition.y2 - event.imagePosition.y1;
+
+    this.resize_scale = 100;
   }
   imageLoaded(event) {
     this.showCropper = true;
@@ -321,6 +342,17 @@ export class OptimizeImgComponent implements OnInit {
     this.img_og_width = 0;
     this.img_og_height = 0;
     this.img_format = null;
+
+    this.current_cropped_width = 0;
+    this.current_cropped_height = 0;
+    this.cropper = {};
+
+    this.maintainAspectRatio = false;
+    this.aspectRatio = "free-form";
+    this.resize_scale = 100;
+    this.scale = 1;
+    this.rotation = 0;
+    this.canvasRotation = 0;
   }
 
   rotateLeft() {
@@ -360,11 +392,18 @@ export class OptimizeImgComponent implements OnInit {
   }
 
   resetImage() {
+    this.maintainAspectRatio = false;
+    this.aspectRatio = "free-form";
     this.scale = 1;
     this.rotation = 0;
     this.canvasRotation = 0;
     this.transform = {};
     this.resize_scale = 100;
+    this.cropper.x1 = 0;
+    this.cropper.xy = 0;
+    this.cropper.x2 = this.img_og_width;
+    this.cropper.y2 = this.img_og_height;
+    this.transform = { ...this.transform };
   }
 
   zoomOut() {
