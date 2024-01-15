@@ -1,7 +1,18 @@
 <div class="main-content">
-  <div class="progress-bar-wrapper row m-0 justify-content-between" *ngIf="image_processing">
-    <span class="mb-2 text-light">Please wait. Image Processing...</span>
-    <mat-spinner [diameter]="30"></mat-spinner>
+  <div class="progress-bar-wrapper" *ngIf="uploading">
+    <p class="mb-2 text-light">Uploading Image... {{ uploading_progress }}%</p>
+    <div class="progress-bar">
+      <div
+        class="progress-bar-fill"
+        [ngStyle]="{ 'width.%': uploading_progress % 100 }"
+      ></div>
+    </div>
+  </div>
+  <div class="progress-bar-wrapper" *ngIf="image_processing">
+    <p class="mb-2 text-light">Image Processing...</p>
+  </div>
+  <div class="progress-bar-wrapper-download" *ngIf="downloading">
+    <p class="mb-2 text-light">Downloading...</p>
   </div>
   <ngx-dropzone
     (change)="onDropFile($event)"
@@ -58,7 +69,7 @@
             [transform]="transform"
             [alignImage]="'left'"
             [style.display]="showCropper ? null : 'none'"
-            format="png"
+            format="webp"
             (imageCropped)="imageCropped($event)"
             (imageLoaded)="imageLoaded($event)"
             (cropperReady)="cropperReady($event)"

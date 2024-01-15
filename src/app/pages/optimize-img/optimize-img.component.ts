@@ -9,7 +9,8 @@ import {
 
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ImageOptimizeService } from "app/services/image-optimize.service";
-import { Observable, bindCallback, map, of, tap } from "rxjs";
+import { Observable, bindCallback, last, map, of, tap } from "rxjs";
+import { HttpEvent, HttpEventType } from "@angular/common/http";
 
 @Component({
   selector: "app-optimize-img",
@@ -54,7 +55,11 @@ export class OptimizeImgComponent implements OnInit {
   cropper: any = {};
 
   cropper_ready: boolean = false;
+
+  uploading_progress: any = 0;
+  uploading: boolean = false;
   image_processing: boolean = false;
+  downloading: boolean = false;
 
   constructor(
     private imgService: ImageOptimizeService,
@@ -164,7 +169,7 @@ export class OptimizeImgComponent implements OnInit {
     if (this.imgSelected) {
       if (this.img_format != undefined) {
         this.cropper_ready = false;
-        this.image_processing = true;
+
         const options = {
           width: this.resize_width,
           height: this.resize_height,
@@ -172,19 +177,80 @@ export class OptimizeImgComponent implements OnInit {
           format: this.img_format,
         };
 
-        this.imgService.optimizeImage(this.croppedImage, options).subscribe(
-          (response: ArrayBuffer) => {
-            this.downloadImage(response);
-          },
-          (error) => {
-            console.error("Error optimizing image:", error);
-          }
-        );
+        this.uploading = true;
+
+        // console.log(this.formatBytes(this.croppedImage.size));
+
+        this.imgService
+          .optimizeImage(this.croppedImage, options)
+          .pipe(
+            map((event) => this.getEventMessage(event)),
+            tap((message) => {
+              // console.log(message);
+            }),
+            last()
+          )
+          .subscribe((v) => {});
       } else {
         this.openSnackBar("Please select image format!");
       }
     } else {
       this.openSnackBar("Please upload image!");
+    }
+  }
+
+  // formatBytes(bytes, decimals = 2) {
+  //   if (!+bytes) return "0 Bytes";
+
+  //   const k = 1024;
+  //   const dm = decimals < 0 ? 0 : decimals;
+  //   const sizes = [
+  //     "Bytes",
+  //     "KiB",
+  //     "MiB",
+  //     "GiB",
+  //     "TiB",
+  //     "PiB",
+  //     "EiB",
+  //     "ZiB",
+  //     "YiB",
+  //   ];
+
+  //   const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  //   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+  // }
+
+  private getEventMessage(event: HttpEvent<any>) {
+    switch (event.type) {
+      case HttpEventType.Sent:
+        return "sending";
+
+      case HttpEventType.UploadProgress:
+        // Compute and show the % done:
+        const percentDone = event.total
+          ? Math.round((100 * event.loaded) / event.total)
+          : 0;
+
+        this.uploading_progress = percentDone;
+        if (percentDone == 100) {
+          this.uploading = false;
+          this.image_processing = true;
+        }
+        return "upload";
+
+      case HttpEventType.DownloadProgress:
+        this.image_processing = false;
+        this.downloading = true;
+        // Compute and show the % done:
+        return "download";
+
+      case HttpEventType.Response:
+        this.downloadImage(event.body);
+        return `File was completely uploaded!`;
+
+      default:
+        return `File surprising upload event: ${event.type}.`;
     }
   }
 
@@ -209,7 +275,7 @@ export class OptimizeImgComponent implements OnInit {
     // Remove the link from the DOM
     document.body.removeChild(link);
     this.cropper_ready = true;
-    this.image_processing = false;
+    this.downloading = false;
   }
 
   fileChangeEvent(event: any): void {
@@ -245,7 +311,16 @@ export class OptimizeImgComponent implements OnInit {
   }
 
   clear() {
-    location.reload();
+    this.cropper_ready = false;
+    this.imgSelected = false;
+    this.img_file_name = "";
+    this.selected_img_file = null;
+    this.imageChangedEvent = "";
+    this.resize_height = 0;
+    this.resize_width = 0;
+    this.img_og_width = 0;
+    this.img_og_height = 0;
+    this.img_format = null;
   }
 
   rotateLeft() {
