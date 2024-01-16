@@ -47,7 +47,7 @@ export class OptimizeImgComponent implements OnInit {
 
   img_file_name: any = "";
 
-  fileSize: any = "200 KB";
+  // fileSize: any = "200 KB";
 
   img_og_width: number;
   img_og_height: number;
@@ -184,27 +184,33 @@ export class OptimizeImgComponent implements OnInit {
       if (this.img_format != undefined) {
         this.cropper_ready = false;
 
-        const options = {
-          width: this.resize_width,
-          height: this.resize_height,
-          quality: this.img_quality,
-          format: this.img_format,
-        };
-
         this.uploading = true;
 
         // console.log(this.formatBytes(this.croppedImage.size));
 
-        this.imgService
-          .optimizeImage(this.croppedImage, options)
-          .pipe(
-            map((event) => this.getEventMessage(event)),
-            tap((message) => {
-              // console.log(message);
-            }),
-            last()
-          )
-          .subscribe((v) => {});
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const imageData = reader.result.toString().split(",")[1]; // Base64-encoded image data
+          const options = {
+            width: this.resize_width,
+            height: this.resize_height,
+            quality: this.img_quality,
+            format: this.img_format,
+          };
+
+          this.imgService
+            .optimizeImage(imageData, options)
+            .pipe(
+              map((event) => this.getEventMessage(event)),
+              tap((message) => {
+                // console.log(message);
+              }),
+              last()
+            )
+            .subscribe((v) => {});
+        };
+
+        reader.readAsDataURL(this.croppedImage);
       } else {
         this.openSnackBar("Please select image format!");
       }
@@ -260,7 +266,7 @@ export class OptimizeImgComponent implements OnInit {
         return "download";
 
       case HttpEventType.Response:
-        this.downloadImage(event.body);
+        this.downloadFile(event.body.data);
         return `File was completely uploaded!`;
 
       default:
@@ -268,13 +274,18 @@ export class OptimizeImgComponent implements OnInit {
     }
   }
 
-  downloadImage(buffer: ArrayBuffer) {
-    // Assume you have called optimizeImage and obtained the ArrayBuffer
-    const optimizedImageArrayBuffer: ArrayBuffer = buffer;
+  downloadFile(base64String: string) {
+    // Convert the base64 string to a Uint8Array
+    const byteCharacters = atob(base64String);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
 
-    // Create a Blob from the ArrayBuffer
-    const blob = new Blob([optimizedImageArrayBuffer], {
-      type: "application/octet-stream",
+    // Create a Blob from the Uint8Array
+    const blob = new Blob([byteArray], {
+      type: this.getFileType(this.img_format),
     });
 
     // Create a download link
@@ -290,6 +301,30 @@ export class OptimizeImgComponent implements OnInit {
     document.body.removeChild(link);
     this.cropper_ready = true;
     this.downloading = false;
+  }
+
+  private getFileType(type: string): string {
+    switch (type) {
+      case "jpg":
+      case "jpeg":
+        return "image/jpeg";
+      case "png":
+        return "image/png";
+      case "gif":
+        return "image/gif";
+      case "webp":
+        return "image/webp";
+      case "svg":
+        return "image/svg+xml";
+      case "bmp":
+        return "image/bmp";
+      case "avif":
+        return "image/avif";
+      case "tiff":
+        return "image/tiff";
+      default:
+        return "application/octet-stream"; // Default to binary data if extension is unknown
+    }
   }
 
   fileChangeEvent(event: any): void {

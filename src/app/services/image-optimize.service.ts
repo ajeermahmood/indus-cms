@@ -6,23 +6,24 @@ import { Observable } from "rxjs";
   providedIn: "root",
 })
 export class ImageOptimizeService {
-  private apiUrl = "https://ireproperty.com";
+  private apiUrl = "http://localhost:3000";
 
   constructor(private http: HttpClient) {}
 
-  uploadedPercentage: number = 0;
-  downloadedPercentage: number = 0;
-
-  optimizeImage(imageData: Blob, options: any): Observable<any> {
-    const formData = new FormData();
-    formData.append("image", imageData, "image.webp");
-    formData.append("options", JSON.stringify(options));
-
+  optimizeImage(imageData: any, options: any): Observable<any> {
     const url = `${this.apiUrl}/optimize-image`;
-    const req = new HttpRequest("POST", url, formData, {
-      reportProgress: true,
-      responseType: "arraybuffer",
-    });
+    const req = new HttpRequest(
+      "POST",
+      url,
+      {
+        imageData,
+        options,
+      },
+      {
+        reportProgress: true,
+        responseType: "json",
+      }
+    );
     return this.http.request(req);
   }
 }
