@@ -23,6 +23,8 @@ import { AddNewAchievementDialog } from "./add-new-achievement-dialog/add-new-ac
 import { EditAchievementDialog } from "./edit-achievement-dialog/edit-achievement-dialog.component";
 import { ImgViewDialog } from "./img-view-dialog/img-view-dialog.component";
 import { AddNewGuideHighlightDialog } from "./add-new-guide-highlight-dialog/add-new-guide-highlight-dialog.component";
+import { AddNewReviewDialog } from "./add-new-review-dialog/add-new-review-dialog.component";
+import { EditReviewDialog } from "./edit-review-dialog/edit-review-dialog.component";
 
 @NgModule({
   imports: [
@@ -52,6 +54,8 @@ import { AddNewGuideHighlightDialog } from "./add-new-guide-highlight-dialog/add
     EditAchievementDialog,
     ImgViewDialog,
     AddNewGuideHighlightDialog,
+    AddNewReviewDialog,
+    EditReviewDialog,
   ],
   exports: [
     FooterComponent,
@@ -69,6 +73,8 @@ import { AddNewGuideHighlightDialog } from "./add-new-guide-highlight-dialog/add
     EditAchievementDialog,
     ImgViewDialog,
     AddNewGuideHighlightDialog,
+    AddNewReviewDialog,
+    EditReviewDialog,
   ],
 })
 export class ComponentsModule {}

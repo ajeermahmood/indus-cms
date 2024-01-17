@@ -254,7 +254,7 @@ export class AchievementsComponent implements OnInit {
         this.achievementsService
           .deleteAchievement(ach.id, ach.img)
           .subscribe((res) => {
-            this.openSnackBar("Video deleted successfully");
+            this.openSnackBar("Achievement deleted successfully");
             this.reloadPage();
           });
       }

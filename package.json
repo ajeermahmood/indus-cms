@@ -56,6 +56,7 @@
     "rxjs": "~7.5.0",
     "sharp": "^0.33.1",
     "tslib": "^2.3.0",
+    "upscaler": "^1.0.0-beta.19",
     "uuid": "^9.0.1",
     "web-animations-js": "2.3.2",
     "zone.js": "~0.11.4"

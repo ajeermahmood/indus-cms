@@ -14,6 +14,9 @@
   <div class="progress-bar-wrapper-download" *ngIf="downloading">
     <p class="mb-2 text-light">Downloading...</p>
   </div>
+  <div class="progress-bar-wrapper-upscale" *ngIf="upscaling">
+    <p class="mb-2 text-light">Tensorflow Upscaling...</p>
+  </div>
   <ngx-dropzone
     (change)="onDropFile($event)"
     class="dropzone"
@@ -69,7 +72,7 @@
             [transform]="transform"
             [alignImage]="'left'"
             [style.display]="showCropper ? null : 'none'"
-            format="webp"
+            format="jpeg"
             (imageCropped)="imageCropped($event)"
             (imageLoaded)="imageLoaded($event)"
             (cropperReady)="cropperReady($event)"
@@ -243,7 +246,7 @@
           <div class="row m-0">
             <div class="col-6">
               <h3 class="crop-settings-title">Resize Dimensions</h3>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" id="matForm">
                 <mat-label>Width</mat-label>
                 <input
                   matInput
@@ -252,6 +255,17 @@
                   (click)="clickResizeDimention('w')"
                 />
               </mat-form-field>
+              <div
+                *ngIf="tensorflow_upscale"
+                style="
+                  position: absolute;
+                  z-index: 99999;
+                  height: 11rem;
+                  width: 95%;
+                  background: #ffffff80;
+                  top: 30px;
+                "
+              ></div>
               <mat-form-field appearance="outline">
                 <mat-label>Height</mat-label>
                 <input
@@ -276,6 +290,33 @@
                   (click)="resizeImage()"
                 />
               </mat-form-field>
+              <div
+                *ngIf="tensorflow_upscale"
+                style="
+                  position: absolute;
+                  z-index: 99999;
+                  height: 4rem;
+                  width: 95%;
+                  background: #ffffff80;
+                  top: 30px;
+                "
+              ></div>
+              <!-- <mat-slide-toggle [(ngModel)]="tensorflow_upscale"
+                ><span
+                  [ngStyle]="{
+                    color: tensorflow_upscale ? '#ff9200' : 'unset'
+                  }"
+                  style="font-weight: 600; font-size: 16px"
+                  >{{
+                    tensorflow_upscale
+                      ? "Tensorflow Upscale Enabled (Beta)"
+                      : "Tensorflow Upscale Disabled"
+                  }}</span
+                ></mat-slide-toggle
+              > -->
+              <p *ngIf="tensorflow_upscale">
+                Note : This feature is not stable. You may not get expected results.
+              </p>
             </div>
           </div>
         </div>
@@ -286,7 +327,7 @@
           <div class="row m-0">
             <div class="col-6">
               <h3 class="crop-settings-title">Export As</h3>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" *ngIf="!tensorflow_upscale">
                 <mat-label>Image Formats</mat-label>
                 <mat-select [(ngModel)]="img_format">
                   <mat-option *ngFor="let f of imgFormats" [value]="f.value">
@@ -294,11 +335,48 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
+              <mat-form-field appearance="outline" *ngIf="tensorflow_upscale">
+                <mat-label>Image Format</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  readonly
+                  value="PNG - Portable Network Graphics"
+                />
+              </mat-form-field>
+              <div
+                *ngIf="tensorflow_upscale"
+                style="
+                  position: absolute;
+                  z-index: 99999;
+                  height: 4rem;
+                  width: 95%;
+                  background: #ffffff80;
+                  top: 30px;
+                "
+              ></div>
               <h3 class="crop-settings-title">Quality</h3>
-              <mat-form-field appearance="outline">
+              <mat-form-field appearance="outline" *ngIf="!tensorflow_upscale">
                 <mat-label>Quality</mat-label>
                 <input matInput [(ngModel)]="img_quality" type="number" />
               </mat-form-field>
+
+              <mat-form-field appearance="outline" *ngIf="tensorflow_upscale">
+                <mat-label>Quality</mat-label>
+                <input matInput type="text" readonly value="100" />
+              </mat-form-field>
+
+              <div
+                *ngIf="tensorflow_upscale"
+                style="
+                  position: absolute;
+                  z-index: 99999;
+                  height: 4rem;
+                  width: 95%;
+                  background: #ffffff80;
+                  top: 135px;
+                "
+              ></div>
             </div>
             <div class="col-6">
               <h3 class="crop-settings-title">File Name</h3>

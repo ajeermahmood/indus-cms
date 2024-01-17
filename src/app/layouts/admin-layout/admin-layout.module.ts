@@ -48,6 +48,8 @@ import { OptimizeImgComponent } from "app/pages/optimize-img/optimize-img.compon
 import { ImageCropperModule } from "ngx-image-cropper";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { NgxDropzoneModule } from "ngx-dropzone";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { ReviewsComponent } from "app/pages/reviews/reviews.component";
 
 @NgModule({
   imports: [
@@ -77,6 +79,7 @@ import { NgxDropzoneModule } from "ngx-dropzone";
     ImageCropperModule,
     MatCheckboxModule,
     NgxDropzoneModule,
+    MatSlideToggleModule,
   ],
   declarations: [
     LoginComponent,
@@ -102,6 +105,7 @@ import { NgxDropzoneModule } from "ngx-dropzone";
     AddNewGuideComponent,
     EditGuideComponent,
     OptimizeImgComponent,
+    ReviewsComponent,
   ],
 })
 export class AdminLayoutModule {}

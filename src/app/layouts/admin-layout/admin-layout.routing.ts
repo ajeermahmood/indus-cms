@@ -23,6 +23,7 @@ import { CommunityGuidesComponent } from "app/pages/community-guides/community-g
 import { AddNewGuideComponent } from "app/pages/add-new-guide/add-new-guide.component";
 import { EditGuideComponent } from "app/pages/edit-guide/edit-guide.component";
 import { OptimizeImgComponent } from "app/pages/optimize-img/optimize-img.component";
+import { ReviewsComponent } from "app/pages/reviews/reviews.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "login", component: LoginComponent },
@@ -48,4 +49,5 @@ export const AdminLayoutRoutes: Routes = [
   { path: "add-new-guide", component: AddNewGuideComponent },
   { path: "edit-guide", component: EditGuideComponent },
   { path: "optimize-img", component: OptimizeImgComponent },
+  { path: "reviews", component: ReviewsComponent },
 ];

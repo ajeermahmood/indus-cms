@@ -129,3 +129,16 @@
   font-weight: 600;
   font-size: 20px;
 }
+
+.progress-bar-wrapper-upscale {
+  position: fixed;
+  z-index: 9999;
+  top: 10px;
+  right: 15px;
+  width: 440px;
+  background: #ff9200;
+  border-radius: 5px;
+  padding: 20px;
+  font-weight: 600;
+  font-size: 20px;
+}

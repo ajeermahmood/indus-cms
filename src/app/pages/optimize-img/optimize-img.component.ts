@@ -60,9 +60,12 @@ export class OptimizeImgComponent implements OnInit {
   uploading: boolean = false;
   image_processing: boolean = false;
   downloading: boolean = false;
+  upscaling: boolean = false;
 
   current_cropped_width: number = 0;
   current_cropped_height: number = 0;
+
+  tensorflow_upscale: boolean = false;
 
   constructor(
     private imgService: ImageOptimizeService,
@@ -181,25 +184,16 @@ export class OptimizeImgComponent implements OnInit {
 
   async download() {
     if (this.imgSelected) {
-      if (this.img_format != undefined) {
-        this.cropper_ready = false;
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageData = reader.result.toString().split(",")[1]; // Base64-encoded image data
 
-        this.uploading = true;
-
-        // console.log(this.formatBytes(this.croppedImage.size));
-
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const imageData = reader.result.toString().split(",")[1]; // Base64-encoded image data
-          const options = {
-            width: this.resize_width,
-            height: this.resize_height,
-            quality: this.img_quality,
-            format: this.img_format,
-          };
-
+        if (this.tensorflow_upscale) {
+          this.cropper_ready = false;
+          this.uploading = true;
+          this.img_format = "png";
           this.imgService
-            .optimizeImage(imageData, options)
+            .upscaleImage(imageData)
             .pipe(
               map((event) => this.getEventMessage(event)),
               tap((message) => {
@@ -208,38 +202,42 @@ export class OptimizeImgComponent implements OnInit {
               last()
             )
             .subscribe((v) => {});
-        };
+        } else {
+          if (this.img_format != undefined) {
+            const options = {
+              width: this.resize_width,
+              height: this.resize_height,
+              quality: this.img_quality,
+              format: this.img_format,
+            };
 
-        reader.readAsDataURL(this.croppedImage);
-      } else {
-        this.openSnackBar("Please select image format!");
-      }
+            this.cropper_ready = false;
+            this.uploading = true;
+            this.imgService
+              .optimizeImage(imageData, options)
+              .pipe(
+                map((event) => this.getEventMessage(event)),
+                tap((message) => {
+                  // console.log(message);
+                }),
+                last()
+              )
+              .subscribe((v) => {});
+          } else {
+            this.openSnackBar("Please select image format!");
+          }
+        }
+      };
+
+      reader.readAsDataURL(
+        new Blob([this.croppedImage], { type: "image/png" })
+      );
     } else {
       this.openSnackBar("Please upload image!");
     }
   }
 
-  // formatBytes(bytes, decimals = 2) {
-  //   if (!+bytes) return "0 Bytes";
-
-  //   const k = 1024;
-  //   const dm = decimals < 0 ? 0 : decimals;
-  //   const sizes = [
-  //     "Bytes",
-  //     "KiB",
-  //     "MiB",
-  //     "GiB",
-  //     "TiB",
-  //     "PiB",
-  //     "EiB",
-  //     "ZiB",
-  //     "YiB",
-  //   ];
-
-  //   const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  //   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-  // }
+  upscaleImg(files) {}
 
   private getEventMessage(event: HttpEvent<any>) {
     switch (event.type) {
@@ -255,18 +253,29 @@ export class OptimizeImgComponent implements OnInit {
         this.uploading_progress = percentDone;
         if (percentDone == 100) {
           this.uploading = false;
-          this.image_processing = true;
+
+          if (!this.tensorflow_upscale) {
+            this.image_processing = true;
+          } else {
+            this.upscaling = true;
+          }
         }
         return "upload";
 
       case HttpEventType.DownloadProgress:
-        this.image_processing = false;
         this.downloading = true;
+
+        if (!this.tensorflow_upscale) {
+          this.image_processing = false;
+        } else {
+          this.upscaling = false;
+        }
         // Compute and show the % done:
         return "download";
 
       case HttpEventType.Response:
         this.downloadFile(event.body.data);
+
         return `File was completely uploaded!`;
 
       default:
@@ -328,9 +337,9 @@ export class OptimizeImgComponent implements OnInit {
   }
 
   fileChangeEvent(event: any): void {
+    console.log(event.target.files);
     if (event.target.files.length > 0) {
       this.cropper_ready = false;
-      this.imageChangedEvent = event;
       this.imgSelected = true;
       this.resize_scale = 100;
 
@@ -367,6 +376,7 @@ export class OptimizeImgComponent implements OnInit {
   }
 
   clear() {
+    this.tensorflow_upscale = false;
     this.cropper_ready = false;
     this.imgSelected = false;
     this.img_file_name = "";
@@ -427,6 +437,7 @@ export class OptimizeImgComponent implements OnInit {
   }
 
   resetImage() {
+    this.tensorflow_upscale = false;
     this.maintainAspectRatio = false;
     this.aspectRatio = "free-form";
     this.scale = 1;
