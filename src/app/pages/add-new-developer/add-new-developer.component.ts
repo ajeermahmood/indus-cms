@@ -33,6 +33,8 @@ export class AddNewDeveloperComponent implements OnInit {
   about_img: any = "assets/img/add-image.png";
   about_img_file: File;
 
+  tinyMceConfig: any;
+
   constructor(
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
@@ -43,6 +45,52 @@ export class AddNewDeveloperComponent implements OnInit {
     if (!this.authService.currentUserValue) {
       this.router.navigate(["/login"]);
     }
+
+    this.tinyMceConfig = {
+      height: 500,
+      // menubar: true,
+      plugins: [
+        "advlist",
+        "autolink",
+        "link",
+        "image",
+        "lists",
+        "charmap",
+        "preview",
+        "anchor",
+        "pagebreak",
+        "searchreplace",
+        "wordcount",
+        "visualblocks",
+        "code",
+        "fullscreen",
+        "insertdatetime",
+        "media",
+        "table",
+        "emoticons",
+        "template",
+        "help",
+      ],
+      toolbar:
+        "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | " +
+        "bullist numlist outdent indent | link image | print preview media fullscreen | " +
+        "forecolor backcolor emoticons | help",
+      // plugins: [
+      //   "advlist autolink lists link image charmap print preview anchor",
+      //   "searchreplace visualblocks code fullscreen",
+      //   "insertdatetime media table paste code help wordcount",
+      //   "tinycomments mentions codesample emoticons checklist mediaembed",
+      //   "casechange export formatpainter pageembed permanentpen footnotes",
+      //   "advtemplate advtable advcode editimage tableofcontents mergetags",
+      //   "powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss textcolor",
+      // ],
+      // toolbar: `undo redo | blocks fontfamily fontsize | formatselect | bold italic backcolor forecolor underline strikethrough link |
+      //           align checklist numlist bullist indent outdent | emoticons charmap |
+      //           image media table mergetags | lineheight | tinycomments |
+      //           removeformat`,
+      menubar: "file edit view insert format tools table help",
+      link_default_target: "_blank",
+    };
   }
 
   ngOnInit() {}

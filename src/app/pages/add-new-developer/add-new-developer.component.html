@@ -46,13 +46,9 @@
         <div class="col pr-0">
           <mat-form-field appearance="outline">
             <mat-label>Name</mat-label>
-            <input
-              matInput
-              placeholder="Enter name"
-              [(ngModel)]="dev_name"
-            />
+            <input matInput placeholder="Enter name" [(ngModel)]="dev_name" />
           </mat-form-field>
-          <mat-form-field appearance="outline">
+          <!-- <mat-form-field appearance="outline">
             <mat-label>Short Description</mat-label>
             <textarea
               matInput
@@ -60,11 +56,25 @@
               rows="3"
               [(ngModel)]="dev_short_desc"
             ></textarea>
-          </mat-form-field>
+          </mat-form-field> -->
+          <mat-label>Short Description</mat-label>
+          <editor
+            class="mb-5"
+            apiKey="uriyx9p2q6b73b9ngch8oowagdehtak3ytc2v1r9x99qv2rw"
+            [init]="tinyMceConfig"
+            [(ngModel)]="dev_short_desc"
+          ></editor>
         </div>
       </div>
+      <mat-label>About Developer</mat-label>
+      <editor
+        class="mb-5"
+        apiKey="uriyx9p2q6b73b9ngch8oowagdehtak3ytc2v1r9x99qv2rw"
+        [init]="tinyMceConfig"
+        [(ngModel)]="dev_long_desc"
+      ></editor>
 
-      <mat-form-field appearance="outline">
+      <!-- <mat-form-field appearance="outline">
         <mat-label>About Developer</mat-label>
         <textarea
           matInput
@@ -72,7 +82,7 @@
           rows="15"
           [(ngModel)]="dev_long_desc"
         ></textarea>
-      </mat-form-field>
+      </mat-form-field> -->
 
       <div class="row m-0">
         <div class="col-6 pl-0">
