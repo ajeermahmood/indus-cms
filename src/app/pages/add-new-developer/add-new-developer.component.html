@@ -112,6 +112,106 @@
           <img class="w-100 maxh20rem contain" src="{{ about_img }}" alt="" />
         </div>
       </div>
+
+      <div class="col mt-5">
+        <h3>Add properties by</h3>
+        <div class="row">
+          <div class="col-5">
+            <mat-form-field appearance="outline" class="mt-0">
+              <mat-label>Properties Name</mat-label>
+              <input
+                matInput
+                placeholder="Enter name"
+                [(ngModel)]="properties_by_name"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-5">
+            <mat-form-field appearance="outline" class="mt-0">
+              <mat-label>Attached link</mat-label>
+              <input
+                matInput
+                placeholder="Enter link"
+                [(ngModel)]="properties_by_link"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <div class="btn add-btn-by" (click)="addProps('prop')">Add</div>
+          </div>
+        </div>
+
+        <span class="row m-0 align-items-center mt-2" *ngFor="let prop of properties_by;let index = index">
+          <span class="prop-bg">Name : <b>{{ prop.name }}</b> - Link : <b>{{ prop.link }}</b></span>
+          <mat-icon class="remove-icon cursor-ponter ml-3" (click)="removeProps('prop', index)">cancel</mat-icon>
+        </span>
+      </div>
+      <div class="col mt-5">
+        <h3>Add Communities by</h3>
+        <div class="row">
+          <div class="col-5">
+            <mat-form-field appearance="outline" class="mt-0">
+              <mat-label>Community Name</mat-label>
+              <input
+                matInput
+                placeholder="Enter name"
+                [(ngModel)]="communities_by_name"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-5">
+            <mat-form-field appearance="outline" class="mt-0">
+              <mat-label>Attached link</mat-label>
+              <input
+                matInput
+                placeholder="Enter link"
+                [(ngModel)]="communities_by_link"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <div class="btn add-btn-by" (click)="addProps('comm')">Add</div>
+          </div>
+        </div>
+
+        <span class="row m-0 align-items-center mt-2" *ngFor="let prop of communities_by;let index = index">
+          <span class="prop-bg">Name : <b>{{ prop.name }}</b> - Link : <b>{{ prop.link }}</b></span>
+          <mat-icon class="remove-icon cursor-ponter ml-3" (click)="removeProps('comm', index)">cancel</mat-icon>
+        </span>
+      </div>
+      <div class="col mt-5">
+        <h3>Add ready to move by</h3>
+        <div class="row">
+          <div class="col-5">
+            <mat-form-field appearance="outline" class="mt-0">
+              <mat-label>Ready to move Name</mat-label>
+              <input
+                matInput
+                placeholder="Enter name"
+                [(ngModel)]="ready_to_move_by_name"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-5">
+            <mat-form-field appearance="outline" class="mt-0">
+              <mat-label>Attached link</mat-label>
+              <input
+                matInput
+                placeholder="Enter link"
+                [(ngModel)]="ready_to_move_by_link"
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <div class="btn add-btn-by" (click)="addProps('ready')">Add</div>
+          </div>
+        </div>
+
+        <span class="row m-0 align-items-center mt-2" *ngFor="let prop of ready_to_move_by;let index = index">
+          <span class="prop-bg">Name : <b>{{ prop.name }}</b> - Link : <b>{{ prop.link }}</b></span>
+          <mat-icon class="remove-icon cursor-ponter ml-3" (click)="removeProps('ready', index)">cancel</mat-icon>
+        </span>
+      </div>
     </div>
   </div>
 </div>

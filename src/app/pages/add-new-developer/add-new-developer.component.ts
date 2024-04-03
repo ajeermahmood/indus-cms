@@ -35,6 +35,19 @@ export class AddNewDeveloperComponent implements OnInit {
 
   tinyMceConfig: any;
 
+  properties_by_name: any;
+  properties_by_link: any;
+
+  communities_by_name: any;
+  communities_by_link: any;
+
+  ready_to_move_by_name: any;
+  ready_to_move_by_link: any;
+
+  properties_by: any[] = [];
+  communities_by: any[] = [];
+  ready_to_move_by: any[] = [];
+
   constructor(
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
@@ -91,6 +104,44 @@ export class AddNewDeveloperComponent implements OnInit {
       menubar: "file edit view insert format tools table help",
       link_default_target: "_blank",
     };
+  }
+
+  addProps(type) {
+    if (type == "prop") {
+      this.properties_by.push({
+        name: this.properties_by_name,
+        link: this.properties_by_link,
+      });
+
+      this.properties_by_name = "";
+      this.properties_by_link = "";
+    } else if (type == "comm") {
+      this.communities_by.push({
+        name: this.communities_by_name,
+        link: this.communities_by_link,
+      });
+
+      this.communities_by_name = "";
+      this.communities_by_link = "";
+    } else if (type == "ready") {
+      this.ready_to_move_by.push({
+        name: this.ready_to_move_by_name,
+        link: this.ready_to_move_by_link,
+      });
+
+      this.ready_to_move_by_name = "";
+      this.ready_to_move_by_link = "";
+    }
+  }
+
+  removeProps(type, index) {
+    if (type == "prop") {
+      this.properties_by.splice(index, 1);
+    } else if (type == "comm") {
+      this.communities_by.splice(index, 1);
+    } else if (type == "ready") {
+      this.ready_to_move_by.splice(index, 1);
+    }
   }
 
   ngOnInit() {}
@@ -164,6 +215,10 @@ export class AddNewDeveloperComponent implements OnInit {
             this.about_img_file.name.split(".").length - 1
           ]
         }`,
+
+        properties_by: JSON.stringify(this.properties_by),
+        communities_by: JSON.stringify(this.communities_by),
+        ready_to_move_by: JSON.stringify(this.ready_to_move_by),
       };
 
       this.developerService
