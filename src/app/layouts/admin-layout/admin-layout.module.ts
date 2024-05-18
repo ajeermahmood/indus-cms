@@ -50,6 +50,9 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { NgxDropzoneModule } from "ngx-dropzone";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { ReviewsComponent } from "app/pages/reviews/reviews.component";
+import { NewLaunchesComponent } from "app/pages/new-launches/new-launches.component";
+import { NewLaunchesViewComponent } from "app/pages/new-launches-view/new-launches-view.component";
+import { AddNewLaunchComponent } from "app/pages/add-new-launch/add-new-launch.component";
 
 @NgModule({
   imports: [
@@ -106,6 +109,9 @@ import { ReviewsComponent } from "app/pages/reviews/reviews.component";
     EditGuideComponent,
     OptimizeImgComponent,
     ReviewsComponent,
+    NewLaunchesComponent,
+    NewLaunchesViewComponent,
+    AddNewLaunchComponent,
   ],
 })
 export class AdminLayoutModule {}

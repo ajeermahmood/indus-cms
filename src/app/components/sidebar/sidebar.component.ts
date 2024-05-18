@@ -23,6 +23,7 @@ export const ROUTES: RouteInfo[] = [
   },
   { path: "/blogs", title: "Blogs", icon: "library_books", class: "" },
   { path: "/news", title: "News", icon: "newspaper", class: "" },
+  { path: "/new-launches", title: "New Launches", icon: "rocket_launch", class: "" },
   { path: "/popup-ad", title: "Popup Ad", icon: "aspect_ratio", class: "" },
   { path: "/reviews", title: "Google Reviews", icon: "reviews", class: "" },
   { path: "/team", title: "Team", icon: "groups", class: "" },

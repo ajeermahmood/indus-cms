@@ -24,6 +24,9 @@ import { AddNewGuideComponent } from "app/pages/add-new-guide/add-new-guide.comp
 import { EditGuideComponent } from "app/pages/edit-guide/edit-guide.component";
 import { OptimizeImgComponent } from "app/pages/optimize-img/optimize-img.component";
 import { ReviewsComponent } from "app/pages/reviews/reviews.component";
+import { NewLaunchesComponent } from "app/pages/new-launches/new-launches.component";
+import { NewLaunchesViewComponent } from "app/pages/new-launches-view/new-launches-view.component";
+import { AddNewLaunchComponent } from "app/pages/add-new-launch/add-new-launch.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: "login", component: LoginComponent },
@@ -50,4 +53,7 @@ export const AdminLayoutRoutes: Routes = [
   { path: "edit-guide", component: EditGuideComponent },
   { path: "optimize-img", component: OptimizeImgComponent },
   { path: "reviews", component: ReviewsComponent },
+  { path: "new-launches", component: NewLaunchesComponent },
+  { path: "new-launch-view", component: NewLaunchesViewComponent },
+  { path: "add-new-launch", component: AddNewLaunchComponent },
 ];

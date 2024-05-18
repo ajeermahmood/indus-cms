@@ -52,6 +52,8 @@ export class CautionDialog implements OnInit {
         return "Community Guide";
       case "review":
         return "Review";
+      case "launch":
+        return "New Launch";
       default:
         return "";
     }
