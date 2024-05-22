@@ -108,7 +108,7 @@ export class NewLaunchesViewComponent implements OnInit {
   }
 
   preview() {
-    window.open(`https://indusre.com/new-launches/${this.launch_id}`, "_blank");
+    window.open(`https://indusre.com/launch/${this.launch_id}`, "_blank");
   }
 
   editImg(img, type): void {
